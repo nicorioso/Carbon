@@ -40,3 +40,5 @@ Las referencias absolutas a imágenes personales se conservan literalmente en Hy
 3. Con autorización de despliegue, instalar por tandas desde staging en las rutas nativas, conservando modos y tipos. Empezar por un consumidor de bajo impacto. Los enlaces systemd y la configuración de SDDM tienen tratamientos separados.
 4. Validar el arranque y la interacción de cada componente con la sesión de pruebas. Para Hyprland, revisar `hyprctl configerrors`. Para Waybar, validar JSONC y módulos. Para scripts, comprobar sintaxis y ejercitar los flujos en un entorno aislado. Confirmar recursos, fuentes y resolución de rutas.
 5. Ante un fallo, restaurar los destinos afectados desde el staging del respaldo y comparar contenidos y permisos. Pasar a cuarentena los destinos que antes estaban ausentes. Aprobar por separado cualquier recarga o prueba de un inicio de sesión real.
+
+Para el script de capturas, consultar el [procedimiento específico de instalación, prueba gráfica y rollback](SCREENSHOTS.md).

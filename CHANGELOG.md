@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-003-A · Capturas de región
+
+- Separación de cancelación y errores de selección, guardado exclusivo de PNG y copia con MIME explícito.
+- Notificación con libnotify. Los fallos posteriores al guardado conservan la imagen.
+- Pruebas aisladas y procedimientos de despliegue y rollback. Instalación y verificación gráfica pendientes.
+
 ## CARBON-002 · Línea base reproducible
 
 - Inicialización de un Git local y selección explícita de 22 dotfiles sin modificaciones de contenido.
