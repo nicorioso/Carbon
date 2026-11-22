@@ -1,0 +1,81 @@
+* {
+    font-family: "Noto Sans", "Font Awesome 7 Free Solid", "Font Awesome 7 Brands", sans-serif;
+    font-size: 12px;
+    min-height: 0;
+    border-radius: 0;
+}
+
+window#waybar {
+    background: #1b1b1b;
+    color: #f5f5f5;
+    border-bottom: 1px solid #292929;
+}
+
+#workspaces button {
+    min-width: 23px;
+    padding: 0 5px;
+    color: #b3b3b3;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button:hover {
+    background: #222222;
+    color: #ffffff;
+}
+
+#workspaces button.active {
+    background: #d6d6d6;
+    color: #000000;
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    box-shadow: inset 0 -2px #d6d6d6;
+    color: #ffffff;
+}
+
+#workspaces button.active.urgent {
+    color: #000000;
+}
+
+#network, #bluetooth, #pulseaudio, #backlight, #battery, #clock, #tray {
+    padding: 0 7px;
+}
+
+#network.disconnected, #bluetooth.off, #bluetooth.disabled, #pulseaudio.muted {
+    color: #a0a0a0;
+}
+
+#battery.charging, #battery.critical:not(.charging), #bluetooth.connected {
+    color: #d6d6d6;
+}
+
+#tray > .needs-attention image {
+    -gtk-icon-effect: highlight;
+}
+
+#tray > .passive image {
+    -gtk-icon-effect: dim;
+}
+
+tooltip {
+    background: #151515;
+    border: 1px solid #333333;
+    color: #f5f5f5;
+}
+
+#custom-ai-usage {
+    padding: 0 7px;
+    border-radius: 0;
+    border-left: 1px solid #292929;
+    color: #f5f5f5;
+    background: #1b1b1b;
+}
+
+#custom-ai-usage.busy,
+#custom-ai-usage.error {
+    color: #4f9dff;
+}

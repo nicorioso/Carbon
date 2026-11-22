@@ -1,0 +1,50 @@
+* {
+    font: "Noto Sans 11";
+    background-color: transparent;
+    text-color: #f5f5f5;
+}
+
+window {
+    location: center;
+    anchor: center;
+    width: 340px;
+    background-color: #1b1b1b;
+    border: 2px;
+    border-color: #f5f5f5;
+    padding: 0px;
+}
+
+mainbox {
+    children: [ listview ];
+    padding: 0px;
+    spacing: 0px;
+}
+
+listview {
+    lines: 4;
+    columns: 1;
+    fixed-height: true;
+    scrollbar: false;
+    padding: 0px;
+    spacing: 0px;
+}
+
+element {
+    children: [ element-text ];
+    padding: 15px 16px;
+}
+
+element normal.normal, element alternate.normal {
+    background-color: #1b1b1b;
+    text-color: #f5f5f5;
+}
+
+element selected.normal {
+    background-color: #454545;
+    text-color: #ffffff;
+}
+
+element-text {
+    text-color: inherit;
+    vertical-align: 0.5;
+}

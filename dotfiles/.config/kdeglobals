@@ -1,0 +1,65 @@
+[Colors:Button]
+BackgroundAlternate=52,52,52
+BackgroundNormal=42,42,42
+DecorationFocus=214,214,214
+DecorationHover=160,160,160
+ForegroundInactive=165,165,165
+ForegroundLink=214,214,214
+ForegroundNormal=245,245,245
+
+[Colors:Header]
+BackgroundAlternate=42,42,42
+BackgroundNormal=32,32,32
+DecorationFocus=214,214,214
+DecorationHover=160,160,160
+ForegroundInactive=165,165,165
+ForegroundLink=214,214,214
+ForegroundNormal=245,245,245
+
+[Colors:Selection]
+BackgroundAlternate=192,192,192
+BackgroundNormal=214,214,214
+DecorationFocus=214,214,214
+DecorationHover=160,160,160
+ForegroundInactive=60,60,60
+ForegroundLink=25,25,25
+ForegroundNormal=21,21,21
+
+[Colors:Tooltip]
+BackgroundAlternate=40,40,40
+BackgroundNormal=30,30,30
+DecorationFocus=214,214,214
+DecorationHover=160,160,160
+ForegroundInactive=165,165,165
+ForegroundLink=214,214,214
+ForegroundNormal=245,245,245
+
+[Colors:View]
+BackgroundAlternate=34,34,34
+BackgroundNormal=23,23,23
+DecorationFocus=214,214,214
+DecorationHover=160,160,160
+ForegroundInactive=165,165,165
+ForegroundLink=214,214,214
+ForegroundNormal=245,245,245
+
+[Colors:Window]
+BackgroundAlternate=34,34,34
+BackgroundNormal=27,27,27
+DecorationFocus=214,214,214
+DecorationHover=160,160,160
+ForegroundInactive=165,165,165
+ForegroundLink=214,214,214
+ForegroundNormal=245,245,245
+
+[General]
+font=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=Noto Sans,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[Icons]
+Theme=breeze-dark
+
+[WM]
+activeFont=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1

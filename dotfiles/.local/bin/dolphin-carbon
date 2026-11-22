@@ -1,0 +1,5 @@
+#!/bin/sh
+# Give Dolphin's file view a dark Qt palette before its widgets are created.
+export QT_QPA_PLATFORMTHEME=gtk3
+export GTK_THEME=Adwaita:dark
+exec /usr/bin/dolphin "$@"

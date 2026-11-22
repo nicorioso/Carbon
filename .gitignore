@@ -1,0 +1,45 @@
+# Backups, staging and local profiles
+*.bak
+*.bak.*
+*.backup
+*~
+/carbon-backup.*/
+/staging/
+/restore.*/
+/profiles/*
+!/profiles/README.md
+!/profiles/example.json
+# Application data and credentials
+.cache/
+.local/state/
+.codex/
+.aws/
+.gnupg/
+.ssh/
+opencode/
+cliphist/
+dconf/
+dolphin/
+auth.json
+credentials*
+cookies*
+.env
+.env.*
+*.pem
+*.key
+*.sqlite*
+*.db*
+*.jsonl
+*.log
+*history*
+# Private assets and archives
+imagenes/
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.ttf
+*.otf
+*.tar
+*.tar.*
+*.zip

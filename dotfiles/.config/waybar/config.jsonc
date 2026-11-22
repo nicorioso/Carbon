@@ -1,0 +1,117 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 2,
+    "modules-left": [
+        "hyprland/workspaces"
+    ],
+    "fixed-center": true,
+    "modules-center": ["clock"],
+    "modules-right": [
+        "network",
+        "bluetooth",
+        "pulseaudio",
+        "backlight",
+        "battery",
+        "custom/ai-usage",
+        "tray"
+    ],
+    "hyprland/workspaces": {
+        "format": "{name}",
+        "on-click": "activate",
+        "sort-by-number": true,
+        "persistent-workspaces": {
+            "*": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            ]
+        }
+    },
+    "network": {
+        "interface": "wlp3s0",
+        "format-wifi": " {signalStrength}%",
+        "format-ethernet": " Conectado",
+        "format-disconnected": " Sin Wi-Fi",
+        "tooltip-format-wifi": "Wi-Fi: {essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "Ethernet: {ipaddr}",
+        "on-click": "nm-connection-editor"
+    },
+    "bluetooth": {
+        "format": "",
+        "format-on": "",
+        "format-off": "",
+        "format-disabled": "",
+        "format-connected": " {num_connections}",
+        "tooltip-format": "Bluetooth: {status}\n{device_alias}",
+        "tooltip": true,
+        "on-click": "blueman-manager"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": " Silencio",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "default": [
+                "",
+                "",
+                ""
+            ]
+        },
+        "on-click": "pavucontrol"
+    },
+    "backlight": {
+        "format": " {percent}%",
+        "device": "amdgpu_bl1"
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
+    },
+    "cpu": {
+        "format": "󰍛 {usage}%",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "󰘚 {percentage}%",
+        "tooltip": false
+    },
+    "clock": {
+        "format": " {:%a %d %b  %H:%M}",
+        "tooltip-format": "{:%A, %d de %B de %Y}"
+    },
+    "custom/ai-usage": {
+        "exec": "~/.local/bin/ai-usage poll",
+        "interval": 30,
+        "return-type": "json",
+        "on-click": "~/.local/bin/ai-usage show",
+        "on-click-middle": "~/.local/bin/ai-usage refresh"
+    },
+    "tray": {
+        "icon-size": 16,
+        "spacing": 6,
+        "show-passive-items": true
+    }
+}
