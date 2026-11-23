@@ -2,6 +2,19 @@
 
 theme="${XDG_CONFIG_HOME:-$HOME/.config}/rofi/power-menu.rasi"
 
+require_command() {
+    if ! command -v "$1" >/dev/null; then
+        printf 'Menú de energía: falta %s.\n' "$1" >&2
+        exit 127
+    fi
+}
+
+require_command rofi
+if [ ! -f "$theme" ] || [ ! -r "$theme" ]; then
+    printf 'Menú de energía: no se puede leer el tema Rofi.\n' >&2
+    exit 1
+fi
+
 selection=$(printf '<span font_family="Font Awesome 7 Free Solid" foreground="#ffffff">%s</span>   %s\n' \
     '' 'Apagar' \
     '' 'Reiniciar' \
@@ -9,17 +22,31 @@ selection=$(printf '<span font_family="Font Awesome 7 Free Solid" foreground="#f
     '' 'Cerrar sesión' |
     rofi -no-config -dmenu -theme "$theme" -markup-rows -no-custom -format i)
 status=$?
-[ "$status" -eq 1 ] && exit 0
-[ "$status" -eq 0 ] || exit "$status"
+if [ "$status" -eq 1 ] && [ -z "$selection" ]; then
+    exit 0
+fi
+if [ "$status" -ne 0 ]; then
+    printf 'Menú de energía: Rofi terminó con código %s.\n' "$status" >&2
+    exit "$status"
+fi
 
 case "$selection" in
-    0) exec systemctl poweroff ;;
-    1) exec systemctl reboot ;;
-    2) exec systemctl suspend ;;
+    '') exit 0 ;;
+    0) action=poweroff ;;
+    1) action=reboot ;;
+    2) action=suspend ;;
     3)
         if command -v hyprshutdown >/dev/null 2>&1; then
             exec hyprshutdown
         fi
+        require_command hyprctl
         exec hyprctl dispatch 'hl.dsp.exit()'
         ;;
+    *)
+        printf 'Menú de energía: selección no válida.\n' >&2
+        exit 2
+        ;;
 esac
+
+require_command systemctl
+exec systemctl "$action"

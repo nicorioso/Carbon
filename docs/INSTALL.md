@@ -25,6 +25,7 @@ Cada ruta siguiente tiene origen `~/RUTA`, copia en `dotfiles/RUTA` y el mismo d
 .config/mimeapps.list
 .config/systemd/user/cliphist.service
 .local/bin/change-workspace-relative.sh
+.local/bin/cliphist-menu.sh
 .local/bin/dolphin-carbon
 .local/bin/power-menu.sh
 .local/bin/save-screenshot.sh
@@ -42,3 +43,5 @@ Las referencias absolutas a imágenes personales se conservan literalmente en Hy
 5. Ante un fallo, restaurar los destinos afectados desde el staging del respaldo y comparar contenidos y permisos. Pasar a cuarentena los destinos que antes estaban ausentes. Aprobar por separado cualquier recarga o prueba de un inicio de sesión real.
 
 Para el script de capturas, consultar el [procedimiento específico de instalación, prueba gráfica y rollback](SCREENSHOTS.md).
+
+Para los scripts e interacciones de CARBON-003-C, consultar [el orden de instalación, respaldos individuales, rollback y pruebas manuales](SCRIPTS.md).

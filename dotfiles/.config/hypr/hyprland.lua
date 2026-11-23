@@ -285,7 +285,7 @@ hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("$HOME/.local/bin/power-menu.sh"))
 hl.bind("PRINT", hl.dsp.exec_cmd("$HOME/.local/bin/save-screenshot.sh"))
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist list | wofi --dmenu | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd('"$HOME/.local/bin/cliphist-menu.sh"'))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 

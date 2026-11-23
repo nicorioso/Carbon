@@ -1,5 +1,12 @@
 # Historial de cambios
 
+## CARBON-003-C · Robustez de scripts e interacciones
+
+- Validación de JSON e IPC en la navegación relativa de escritorios.
+- Auxiliar de historial Wofi que protege el portapapeles en cancelaciones y errores, con cambio de una línea en el Lua versionado.
+- Validación de entradas y dependencias en el menú de energía. Wrapper Dolphin conservado y probado.
+- Despliegue y validación gráfica pendientes. [Guía de scripts](docs/SCRIPTS.md)
+
 ## CARBON-003-B · Auditoría de arranque
 
 - Cierre documental de la auditoría. En la sesión observada se confirmó un solo `nm-applet` y no se detectaron procesos duplicados.
