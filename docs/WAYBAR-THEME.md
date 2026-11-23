@@ -44,7 +44,7 @@ python -B tests/screenshots/test_screenshots.py
 
 Con los tokens oficiales, `cmp` confirma igualdad **byte a byte** y el SHA-256 es `02b35d4abbc023a7b5d06971b1888f42d52e8597b092e9ab43881bf2d3a95a0f`. Todas las diferencias están en el código fuente de la plantilla, donde los literales seleccionados se expresan como referencias a tokens. Los archivos nativos del repositorio se conservan como referencia.
 
-Se validaron original y candidato con `GtkCssProvider` de GTK 3.24.52 fuera de una sesión gráfica. Los tests incluyen igualdad completa, aplicación de tokens sin alterar reglas locales, determinismo, idempotencia, errores de esquema, rechazo de destinos inseguros y compatibilidad con los fragmentos previos. El parser comprueba sintaxis y el diff comprueba la hoja generada. Sigue pendiente observar Waybar 0.16.0 en una sesión autorizada, donde influyen la ruta cargada, los estilos GTK, las fuentes disponibles, la escala y el estado de los módulos. [Hojas de estilo de Waybar](https://github.com/Alexays/Waybar/blob/master/man/waybar-styles.5.scd.in) · [Validación con GTK CSS](https://docs.gtk.org/gtk3/signal.CssProvider.parsing-error.html)
+Se validaron original y candidato con `GtkCssProvider` de GTK 3.24.52 fuera de una sesión gráfica. Los tests incluyen igualdad completa, aplicación de tokens sin alterar reglas locales, determinismo, idempotencia, errores de esquema, rechazo de destinos inseguros y compatibilidad con los fragmentos previos. El parser comprueba sintaxis y el diff comprueba la hoja generada. La comprobación visual corresponde a la sesión real y se registra abajo. [Hojas de estilo de Waybar](https://github.com/Alexays/Waybar/blob/master/man/waybar-styles.5.scd.in) · [Validación con GTK CSS](https://docs.gtk.org/gtk3/signal.CssProvider.parsing-error.html)
 
 ## Verificación de la sesión activa
 
@@ -59,9 +59,9 @@ El journal de la invocación vigente de `waybar.service`, filtrado por su PID pr
 | Regresión | Pasaron 20 tests del motor, 6 de Waybar, 16 de interacciones y 15 de capturas. `git diff --check` pasó. |
 | Estado observable por IPC | Hyprland reportó una capa Waybar superior de 1920 × 32 en `eDP-1`. El watcher de bandeja registró `nm-applet` y Fontconfig encontró Noto Sans y las familias Font Awesome 7 configuradas. |
 
-Por tratarse de archivos idénticos, se conservó el CSS activo. Los hashes, inodos, permisos y fechas de CSS y JSONC permanecieron iguales. La operación no recargó ni reinició Waybar. La geometría reportada, la disponibilidad de fuentes y el registro de bandeja son observaciones técnicas. La apariencia y las interacciones quedan pendientes de confirmación por el usuario.
+Por tratarse de archivos idénticos, se conservó el CSS activo. Los hashes, inodos, permisos y fechas de CSS y JSONC permanecieron iguales. La operación no recargó ni reinició Waybar. La geometría reportada, la disponibilidad de fuentes y el registro de bandeja son observaciones técnicas. El usuario confirmó que Waybar se ve y funciona correctamente en la sesión real. Esta confirmación cierra el piloto con la hoja original cargada y el candidato idéntico. Los estados excepcionales que no aparecieron naturalmente quedan fuera de la observación.
 
-## Lista para confirmar en la sesión actual
+## Lista de referencia para la validación en sesión
 
 | Área | Qué comprobar visualmente |
 |---|---|

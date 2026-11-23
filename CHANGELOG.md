@@ -1,8 +1,8 @@
 # Historial de cambios
 
-## CARBON-004-B · Preparación del piloto Waybar
+## CARBON-004-B · Piloto Waybar validado
 
-- Destino de prueba Waybar con plantilla completa y candidato idéntico al CSS actual. Validación GTK 3 y pruebas de paridad, determinismo y confinamiento. La prueba visual y el despliegue requieren autorización. [Piloto Waybar](docs/WAYBAR-THEME.md)
+- Destino de prueba Waybar con plantilla completa y candidato idéntico al CSS actual. Validación GTK 3 y pruebas de paridad, determinismo y confinamiento. El usuario confirmó el funcionamiento y la apariencia en la sesión real. La igualdad byte a byte permitió conservar el CSS activo sin recarga. [Piloto Waybar](docs/WAYBAR-THEME.md)
 
 ## CARBON-004-A · Tokens y motor de temas
 

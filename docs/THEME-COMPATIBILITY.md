@@ -15,4 +15,4 @@ Los pares de colores que ya coinciden admiten un primer piloto por sustitución 
 
 ## Piloto Waybar
 
-El candidato oficial de CARBON-004-B es idéntico al CSS original byte a byte. Usa siete colores compartidos y conserva los cinco literales locales, incluida la excepción azul de AI Usage. La geometría y las acciones se mantienen en sus formatos existentes. La comprobación visual en Waybar sigue pendiente. [Inventario y procedimiento del piloto](WAYBAR-THEME.md)
+El candidato oficial de CARBON-004-B es idéntico al CSS original byte a byte. Usa siete colores compartidos y conserva los cinco literales locales, incluida la excepción azul de AI Usage. La geometría y las acciones se mantienen en sus formatos existentes. El usuario confirmó la apariencia y el funcionamiento de la sesión con la hoja original, idéntica al candidato. [Inventario y procedimiento del piloto](WAYBAR-THEME.md)
