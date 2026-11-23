@@ -1,5 +1,10 @@
 # Historial de cambios
 
+## CARBON-003-B · Auditoría de arranque
+
+- Cierre documental de la auditoría. En la sesión observada se confirmó un solo `nm-applet` y no se detectaron procesos duplicados.
+- Se aprobó conservar los mecanismos de arranque actuales. La prueba de regresión queda pendiente para el próximo inicio normal. [Auditoría y comprobaciones](docs/STARTUP-AUDIT.md)
+
 ## CARBON-003-A · Capturas de región
 
 - Separación de cancelación y errores de selección, guardado exclusivo de PNG y copia con MIME explícito.

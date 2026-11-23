@@ -41,13 +41,21 @@ Las unidades activas examinadas reportaron `Result=success`, `NRestarts=0` y car
 4. **Rollback:** antes de crear un override, registrar si existe y preservar una copia privada con modo y hash. Si era nuevo, moverlo a cuarentena para recuperar la selección de proveedor. Si ya existía, restaurar el ejemplar respaldado y comprobar sus bytes y modo. Verificar en un siguiente inicio autorizado. La configuración de red y la entrada de proveedor quedan fuera de la intervención propuesta.
 5. **Riesgo de nuevo inicio:** Hyprpaper e Hypridle pueden quedar omitidos si falta `WAYLAND_DISPLAY` cuando se evalúan sus condiciones. Mako y el portal Hyprland también dependen de ese entorno. Si el compositor lanza cliphist antes de que el gestor disponga de Wayland y sin un arranque de target ya encolado, el watcher puede fallar al conectar. En esta muestra coincidieron el inicio del target y el watcher, con cero reinicios. Mantener el mecanismo actual y verificar su orden en el siguiente inicio antes de valorar cambios.
 
+## Decisión aprobada
+
+Conservar el arranque de `nm-applet --indicator` desde Hyprland Lua, los servicios systemd de usuario existentes, la activación D-Bus de Mako y los portales y los mecanismos de PipeWire y WirePlumber. Mantener Blueman sin un arranque automático añadido por Carbon. El override de XDG Autostart queda como opción condicionada a nueva evidencia. El cierre es documental.
+
 ## Comprobaciones manuales pendientes
 
-El acceso a procesos, D-Bus, systemd y el IPC funcionó. Queda pendiente la repetibilidad en un nuevo inicio normal, que esta auditoría no provocó. Ejecutar estos comandos de solo lectura cuando ya exista esa sesión.
+La regresión queda **pendiente**. En el próximo inicio normal de Hyprland, ejecutar estas comprobaciones de solo lectura desde la terminal antes de abrir Blueman. Registrar si el applet de red sigue siendo único, su padre sigue siendo Hyprland, Waybar conserva el ítem de red y los servicios gráficos y sockets están disponibles. Evaluar Mako y los portales cuando una aplicación los utilice de forma normal.
 
 | Comando | Dato esperado e interpretación |
 |---|---|
-| `pgrep -a -u "$(id -u)" -x nm-applet` | Una línea con `--indicator`. Si hay más de una, comprobar PPID con `ps -p PID -o pid,ppid,comm` y contrastar cada proceso con la unidad XDG antes de atribuir la duplicación. |
+| `pgrep -a -u "$(id -u)" -x nm-applet` | Una línea con `--indicator`. Comprobar PPID con `ps -p PID -o pid,ppid,comm` y confirmar que el padre es Hyprland. Si hay más de una línea, contrastar los procesos con la unidad XDG. |
 | `systemctl --user show xdg-desktop-autostart.target 'app-nm\x2dapplet@autostart.service' app-blueman@autostart.service -p Id -p ActiveState -p MainPID -p ExecMainStartTimestamp` | En la sesión directa auditada se esperan target y unidades inactivos, PID cero y marcas de arranque vacías. Si cambia, comparar con el recuento real y los padres. |
 | `systemctl --user show hyprland-session.target graphical-session.target cliphist waybar hyprpaper hypridle -p Id -p ActiveState -p Result -p NRestarts` | Targets y servicios gráficos activos. Para el watcher y daemons se esperan éxito y cero reinicios. Una condición omitida, fallo o reinicio requiere revisar el orden de arranque y la disponibilidad de Wayland. |
 | `busctl --user --auto-start=no get-property org.kde.StatusNotifierWatcher /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems` | Un ítem de red con sufijo `nm_applet`. La lista indica registros en la bandeja, independientemente del recuento de procesos y de su visibilidad. |
+| `systemctl --user show blueman-applet.service pipewire.socket pipewire-pulse.socket wireplumber.service -p Id -p ActiveState -p MainPID` | Blueman inactivo antes de abrir su gestor y ambos sockets de audio activos. WirePlumber debe estar activo si PipeWire ya se ha iniciado. |
+| `busctl --user --acquired list` | Tras el uso habitual, los nombres de notificaciones y portales pueden estar adquiridos. Su ausencia antes de una solicitud es compatible con la activación bajo demanda. |
+
+Si aparece una diferencia, anotar el estado y los PID pertinentes antes de proponer cambios. La regresión solo se cierra tras observar el siguiente inicio normal.
