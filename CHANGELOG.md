@@ -5,7 +5,7 @@
 - Validación de JSON e IPC en la navegación relativa de escritorios.
 - Auxiliar de historial Wofi que protege el portapapeles en cancelaciones y errores, con cambio de una línea en el Lua versionado.
 - Validación de entradas y dependencias en el menú de energía. Wrapper Dolphin conservado y probado.
-- Despliegue y validación gráfica pendientes. [Guía de scripts](docs/SCRIPTS.md)
+- Cierre tras instalar `7af124e` y verificar los cuatro destinos. Pasaron 16 pruebas de interacciones, 15 de capturas y las seis comprobaciones manuales. Hyprland 0.57.2 quedó sin errores de configuración y con la recarga automática habilitada. [Guía de scripts](docs/SCRIPTS.md) · [Resultados de pruebas](tests/scripts/README.md)
 
 ## CARBON-003-B · Auditoría de arranque
 
