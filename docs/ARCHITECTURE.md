@@ -20,6 +20,8 @@ SDDM selecciona un tema de sistema y ofrece entradas Wayland. Hyprland concentra
 
 ## Generación de temas
 
+CARBON-004-A incorpora la fuente JSON en `dotfiles/.config/carbon/theme.json`, el motor bajo `dotfiles/.config/carbon/scripts/` y plantillas de prueba bajo `templates/theme/`. La primera entrega genera únicamente fragmentos GTK CSS y Rasi en un directorio de pruebas explícito. [Motor y esquema](THEME-ENGINE.md) · [Identidad Carbon](DESIGN-SYSTEM.md) · [Compatibilidad visual](THEME-COMPATIBILITY.md)
+
 Modelar roles `background`, `surface`, `surfaceRaised`, `border`, `selection`, `text` y fuente de interfaz en JSON versionado. Para adopción fiel, identificar valores actuales de cada consumidor, contrastarlos con la paleta aprobada y documentar desviaciones con un valor transitorio por consumidor. La convergencia visual exige una decisión explícita. El color de texto seleccionado, ANSI, iconos, opacidad y estados tendrán política propia cuando corresponda.
 
 Usar Python estándar, ya instalado. Validar esquema, claves desconocidas, tipos, colores hexadecimales y escapado de cadenas. Usar plantillas versionadas con sustitución estricta y salidas deterministas. Generar primero en un árbol privado separado con un manifiesto de destinos relativos, validar, comparar los diffs y repetir para comprobar idempotencia. Fijar el esquema y las pruebas antes de habilitar una instalación. Los ajustes de hardware y rutas de imágenes pertenecen a un perfil local de ejemplo o sin versionar, según contenido.

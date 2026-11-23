@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-004-A · Tokens y motor de temas
+
+- Esquema Carbon v1 con los seis colores oficiales, semántica, tipografía, geometría, espaciado y opacidad.
+- Motor Python estándar con plantillas GTK CSS y Rasi, validación estricta y publicación conjunta de fragmentos de prueba.
+- Sistema de diseño, informe de compatibilidad y pruebas aisladas. Despliegue visual pendiente de autorización.
+
 ## CARBON-003-C · Robustez de scripts e interacciones
 
 - Validación de JSON e IPC en la navegación relativa de escritorios.

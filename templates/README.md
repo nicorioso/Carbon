@@ -1,3 +1,3 @@
 # Plantillas
 
-Directorio reservado para las plantillas por formato del futuro generador. La línea base conserva los archivos nativos bajo `dotfiles/`.
+`theme/gtk.css.tmpl` genera un fragmento GTK con una clase optativa y `theme/rofi.rasi.tmpl` genera propiedades Rasi con prefijo Carbon. Los dotfiles nativos permanecen bajo `dotfiles/`. [Guía del motor](../docs/THEME-ENGINE.md)
