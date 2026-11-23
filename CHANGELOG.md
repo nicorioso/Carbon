@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-005-D · Mako Carbon Notifications Compact aprobado
+
+- Compact es la variante oficial de Mako. Carbon Theme Engine genera la configuración de 320 px de ancho, 112 px de altura máxima y relleno de 8 px. La urgencia crítica se distingue mediante el borde y las opciones funcionales se heredan de Mako.
+- El usuario confirmó seis validaciones manuales. Se repitieron 94 pruebas automatizadas y se verificó que la configuración activa coincide byte a byte con el candidato. El despliegue aplicó una sola recarga y conservó el PID y el propietario D-Bus.
+- El manifiesto privado registra la ausencia previa de configuración de usuario y el procedimiento para recuperar los valores de fábrica. Kitty conserva su personalización independiente. [Despliegue, aprobación y rollback](docs/MAKO-REDESIGN.md#carbon-005-d2--despliegue-de-carbon-notifications-compact)
+
 ## CARBON-005-C · Rofi Carbon Power Grid aprobado
 
 - Carbon Power Grid se adopta como tema del menú de energía. Carbon Theme Engine genera la cuadrícula de 2 × 2 y 408 px de ancho para Rofi 2.1.1. Se conservan el script, el atajo y los índices de las cuatro acciones.

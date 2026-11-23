@@ -83,3 +83,16 @@ rofi -no-config -rasi-validate "$stage/candidate/power-menu.rasi"
 ```
 
 El destino habitual es `~/.config/rofi/power-menu.rasi`. El script usa `XDG_CONFIG_HOME` cuando está definido. En un despliegue autorizado, verificar el destino efectivo, respaldar el original y sustituir solo el Rasi con Rofi cerrado. Para validar el tema, usar el lanzador seguro con salida de índices. [Validación y rollback de Power Grid](POWER-MENU-REDESIGN.md#carbon-005-c2--validación-nativa-y-despliegue-de-grid)
+
+## Mako Carbon Notifications Compact
+
+Compact es la variante oficial. Desde la raíz del repositorio, generar su configuración en staging:
+
+```bash
+stage=$(mktemp -d /tmp/carbon-mako-compact.XXXXXXXX)
+python -B dotfiles/.config/carbon/scripts/generate-theme.py \
+  --input dotfiles/.config/carbon/theme.json --target mako-compact \
+  --output "$stage/candidate"
+```
+
+El destino de esta instalación es `~/.config/mako/config`. Comprobar la precedencia de `~/.mako/config` y el XDG del daemon antes de un despliegue autorizado. Registrar la presencia o ausencia previa, instalar por renombre y aplicar una recarga con la cola vacía. El prototipo HTML permanece en staging. Kitty conserva su configuración independiente. [Despliegue, validación y rollback de Mako](MAKO-REDESIGN.md#carbon-005-d2--despliegue-de-carbon-notifications-compact)

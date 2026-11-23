@@ -70,6 +70,71 @@ Kitty fue auditada en CARBON-005-D.0 y se conserva como personalización indepen
 3. En una ventana acordada de pruebas, aplicar con `makoctl reload`. Una recarga vuelve a aplicar criterios y recompone superficies de la cola activa. Puede modificar la presentación de avisos abiertos. El código conserva cola e historial en el proceso y rechaza un archivo inválido antes de sustituir la configuración en memoria. Reiniciar libera cola e historial y puede interrumpir la entrega de avisos.
 4. Para revertir, cotejar primero el archivo desplegado. Restaurar el original verificado por renombre o mover el archivo a cuarentena cuando el estado inicial era ausente. Comprobar que la ruta anterior y su precedencia se han recuperado. Aplicar una recarga autorizada para volver a los valores anteriores. [Recarga y reaplicación](https://github.com/emersion/mako/blob/v1.11.0/dbus/mako.c) · [Plan de respaldo](BACKUP-PLAN.md)
 
-### Validaciones pendientes
+### Plan de validación en Wayland
 
 Confirmar en Wayland, con datos ficticios y tras autorización, posición junto a Waybar, altura, tipografía, elisión, carga de iconos por nombre y ruta, distinción de urgencia, progreso, expiración solicitada, límite visible, clic y conservación de la cola durante el rollback. Comprobar el flujo de captura con su mecanismo habitual cuando el usuario lo autorice.
+
+## CARBON-005-D.2 · Despliegue de Carbon Notifications Compact
+
+Se instaló **Compact** desde `ab850a0` en `~/.config/mako/config`. La geometría declara 320 px de ancho, 112 px de altura máxima, 8 px de relleno y Noto Sans de 10 pt. El SHA-256 instalado es `bf5bcadc4c261fb3170dadc2ba049651725e258d22315e066d98b9045d95af1d`. El archivo es de modo `0600` y el directorio nuevo, de modo `0700`. Ambos pertenecen al usuario de la sesión.
+
+Antes del cambio estaban ausentes el archivo, el directorio y el archivo alternativo `~/.mako/config`. El [estado previo](BACKUP-PLAN.md) quedó registrado en el manifiesto privado `~/carbon-mako-compact-recovery.CPnsjqzi/manifest.txt`. Ese directorio contiene también el estado anterior y posterior de la unidad, el candidato aprobado y su manifiesto SHA-256. El respaldo documenta la ausencia original y permite verificar el candidato.
+
+Dos generaciones independientes coincidieron con el candidato aprobado. Pasaron las 94 pruebas automatizadas y el parser de Mako aceptó Compact con conexión D-Bus y Wayland bloqueadas en staging. Se consultó el límite exterior del arreglo de avisos en D-Bus. La cola estaba vacía antes de publicar y justo antes de aplicar. La comprobación descartó el mensaje sin entrar en sus diccionarios y no abrió el historial. La recarga puede recomponer avisos que aparezcan entretanto.
+
+El archivo se publicó por renombre atómico desde un temporal adyacente. Una única llamada a `makoctl reload` terminó correctamente. `mako.service` siguió activo con un solo proceso, PID `28875`, propietario D-Bus `:1.30`, la misma invocación de systemd y cero reinicios. El intervalo de recarga quedó sin advertencias ni diagnósticos de configuración en el filtro del journal. Se verificaron el hash activo y el modo `default`. Kitty conservó el SHA-256 `37a00a094dfbfe4e9081802f9742ee6615b9c4de6ef865c7713ccd9eec58ff2c` en sus copias activa y versionada. Bash, los atajos y los demás componentes comprobados conservaron su estado.
+
+### Recuperar el estado sin configuración de usuario
+
+Elegir un momento sin avisos importantes. El comando verifica el candidato instalado y la ausencia de la ruta alternativa. Solo mueve el archivo de este despliegue a una cuarentena privada. Conserva el directorio de Mako y cualquier otro archivo.
+
+```bash
+(
+  set -euo pipefail
+  umask 077
+  backup="$HOME/carbon-mako-compact-recovery.CPnsjqzi"
+  config="$HOME/.config/mako/config"
+  legacy="$HOME/.mako/config"
+  (cd "$backup" && sha256sum -c SHA256SUMS)
+  test "$(realpath -- "${config%/*}")" = "${config%/*}"
+  test -f "$config" && test ! -L "$config" && test -O "$config"
+  test ! -e "$legacy" && test ! -L "$legacy"
+  cmp -- "$config" "$backup/compact-approved.config"
+  systemctl --user is-active --quiet mako.service
+  pid=$(systemctl --user show mako.service -p MainPID --value)
+  owner() {
+    busctl --user call org.freedesktop.DBus /org/freedesktop/DBus \
+      org.freedesktop.DBus GetNameOwner s org.freedesktop.Notifications
+  }
+  original_owner=$(owner)
+  quarantine=$(mktemp -d "$backup/rollback.XXXXXXXX")
+  cmp -- "$config" "$backup/compact-approved.config"
+  mv -T --no-clobber -- "$config" "$quarantine/config"
+  test ! -e "$config" && test ! -L "$config"
+  test ! -e "$legacy" && test ! -L "$legacy"
+  cmp -- "$quarantine/config" "$backup/compact-approved.config"
+  makoctl reload
+  systemctl --user is-active --quiet mako.service
+  test "$(systemctl --user show mako.service -p MainPID --value)" = "$pid"
+  test "$(owner)" = "$original_owner"
+)
+```
+
+Al completar el comando, la búsqueda de configuración devuelve ambas rutas ausentes y Mako reaplica sus valores de fábrica. Si la recarga falla, conservar la copia en cuarentena y revisar el estado del servicio. Un reinicio requiere autorización separada.
+
+### Aprobación funcional y visual
+
+El usuario aprobó **Carbon Notifications Compact** como variante oficial y confirmó las siguientes seis comprobaciones:
+
+| Validación manual | Resultado |
+|---|---|
+| Diseño | Correcto. |
+| Posición | Correcto. |
+| Texto | Correcto. |
+| Comportamiento | Correcto. |
+| Urgencia | Correcto. |
+| Integridad | Correcto. |
+
+En el cierre se repitieron las 94 pruebas automatizadas. Dos generaciones desde `ab850a0` coincidieron entre sí y con el archivo activo y la copia del manifiesto. El binario de Mako volvió a aceptar el candidato en aislamiento. `mako.service` se mantuvo activo con PID `28875`, una sola instancia, cero reinicios y `:1.30` como propietario de `org.freedesktop.Notifications`. Se verificaron la integridad del manifiesto y la copia aprobada. El cierre no recargó el servicio. Kitty, Bash y los demás componentes comprobados conservaron su estado.
+
+La aprobación cubre la sesión examinada. La geometría, la elisión y el contraste con otras resoluciones, fuentes o escalas quedan fuera de esa validación. El procedimiento de rollback al estado sin archivo se ensayó en staging con recarga simulada.
