@@ -1,5 +1,9 @@
 # Historial de cambios
 
+## CARBON-004-B · Preparación del piloto Waybar
+
+- Destino de prueba Waybar con plantilla completa y candidato idéntico al CSS actual. Validación GTK 3 y pruebas de paridad, determinismo y confinamiento. La prueba visual y el despliegue requieren autorización. [Piloto Waybar](docs/WAYBAR-THEME.md)
+
 ## CARBON-004-A · Tokens y motor de temas
 
 - Esquema Carbon v1 con los seis colores oficiales, semántica, tipografía, geometría, espaciado y opacidad.

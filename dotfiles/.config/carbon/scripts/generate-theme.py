@@ -9,7 +9,7 @@ import sys
 sys.dont_write_bytecode = True
 
 from carbon_theme.output import write_preview
-from carbon_theme.render import render_theme
+from carbon_theme.render import TARGETS, render_theme
 from carbon_theme.schema import ThemeError, load_theme
 
 
@@ -20,10 +20,12 @@ def main():
     default_templates = (Path(__file__).resolve().parent / "../../../../templates/theme").resolve()
     parser.add_argument("--templates", type=Path, default=default_templates,
                         help="directorio de plantillas confiables (por defecto, las del checkout)")
+    parser.add_argument("--target", choices=TARGETS, default="preview",
+                        help="conjunto de archivos a generar (por defecto: preview)")
     args = parser.parse_args()
     try:
         theme = load_theme(args.input)
-        artifacts = render_theme(theme, args.templates)
+        artifacts = render_theme(theme, args.templates, target=args.target)
         created = write_preview(args.output, artifacts)
     except (ThemeError, OSError) as error:
         parser.exit(1, f"Carbon: {error}\n")

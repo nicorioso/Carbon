@@ -12,3 +12,7 @@ Revisión estática del árbol versionado en `4c1da71`. Los estilos, ajustes y e
 | KDE | Ventana `27,27,27`, texto general `245,245,245`, selección y foco `214,214,214`, fuente de interfaz Noto Sans. | Fondo de vista `23,23,23`, cabecera `32,32,32`, botón `42,42,42`, tooltip `30,30,30` y texto de selección `21,21,21`. | El esquema Carbon y `kdeglobals` asignan distinto texto a la vista. El primero usa blanco y el segundo los tonos de texto general. Verificar contraste de nombres en Dolphin y precedencia de ambos orígenes antes de unificar. Breeze Dark conserva su función de iconos. |
 
 Los pares de colores que ya coinciden admiten un primer piloto por sustitución de literales por referencias con los mismos valores. Para los demás, conservar el valor actual en la primera prueba de paridad y evaluar cada diferencia antes de adoptar la paleta. Los fragmentos de CARBON-004-A sirven como prueba del motor. Los dotfiles existentes conservan sus estilos.
+
+## Piloto Waybar
+
+El candidato oficial de CARBON-004-B es idéntico al CSS original byte a byte. Usa siete colores compartidos y conserva los cinco literales locales, incluida la excepción azul de AI Usage. La geometría y las acciones se mantienen en sus formatos existentes. La comprobación visual en Waybar sigue pendiente. [Inventario y procedimiento del piloto](WAYBAR-THEME.md)

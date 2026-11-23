@@ -34,16 +34,23 @@ def _values(theme):
     return values
 
 
-ARTIFACTS = {
-    "carbon-preview.css": "gtk.css.tmpl",
-    "carbon-tokens.rasi": "rofi.rasi.tmpl",
+TARGETS = {
+    "preview": {
+        "carbon-preview.css": "gtk.css.tmpl",
+        "carbon-tokens.rasi": "rofi.rasi.tmpl",
+    },
+    "waybar": {"style.css": "waybar.css.tmpl"},
 }
 
 
-def render_theme(theme, template_dir):
+def render_theme(theme, template_dir, *, target="preview"):
+    try:
+        templates = TARGETS[target]
+    except KeyError as error:
+        raise ThemeError(f"destino de generación desconocido: {target}") from error
     values = _values(theme)
     outputs = {}
-    for filename, template_name in ARTIFACTS.items():
+    for filename, template_name in templates.items():
         try:
             source = (template_dir / template_name).read_text(encoding="utf-8")
             outputs[filename] = Template(source).substitute(values).encode("utf-8")

@@ -26,7 +26,7 @@ Todas las secciones y claves de v1 son obligatorias. Las claves desconocidas y d
 | `spacing` | Unidad entera de 1 a 32. Rellenos de 0 a 128, múltiplos de la unidad, en orden ascendente. |
 | `opacity` | `surface` es un número finito en [0, 1]. Se convierte a un alfa decimal con un máximo de seis posiciones. |
 
-Las medidas enteras rechazan booleanos y decimales. Las familias se emiten como cadenas entre comillas con escapes de barra y comillas, incluso si contienen signos de puntuación o marcadores de plantilla. `string.Template.substitute` solo interpola variables registradas y señala marcadores inválidos o desconocidos. Se procesan las dos plantillas antes de abrir la salida. El JSON carece de campos para rutas de recursos o comandos.
+Las medidas enteras rechazan booleanos y decimales. Las familias se emiten como cadenas entre comillas con escapes de barra y comillas, incluso si contienen signos de puntuación o marcadores de plantilla. `string.Template.substitute` solo interpola variables registradas y señala marcadores inválidos o desconocidos. Se procesan las plantillas del destino antes de abrir la salida. El JSON carece de campos para rutas de recursos o comandos.
 
 ## Generación aislada
 
@@ -42,9 +42,11 @@ python "$repo/dotfiles/.config/carbon/scripts/generate-theme.py" \
 
 Se generan `carbon-preview.css` y `carbon-tokens.rasi`. El CSS declara colores GTK y se limita a widgets con la clase optativa `.carbon-preview`. El Rasi declara propiedades con prefijo `carbon-` para referenciarlas en un tema de prueba. El script encuentra las plantillas del checkout sin depender del directorio de trabajo. Para una copia independiente, pasar su directorio de plantillas confiables mediante `--templates`. [Cargador CSS de GTK](https://docs.gtk.org/gtk3/method.CssProvider.load_from_data.html) · [Manual de temas Rasi](https://github.com/davatorium/rofi/blob/next/doc/rofi-theme.5.markdown)
 
+El destino optativo `--target waybar` produce un `style.css` completo en su propio directorio de pruebas. El destino predeterminado `preview` produce los mismos dos fragmentos. [Piloto de paridad Waybar](WAYBAR-THEME.md)
+
 ## Alcance de escritura
 
-- Crear primero el directorio padre de pruebas y elegir un nombre hijo nuevo. Los fragmentos se preparan en un temporal privado del mismo padre y se publican juntos mediante `renameat2(RENAME_NOREPLACE)`. El destino existente se acepta solo si contiene exactamente los dos archivos regulares con bytes idénticos. Se conservan sus fechas y modos.
+- Crear primero el directorio padre de pruebas y elegir un nombre hijo nuevo. Los fragmentos se preparan en un temporal privado del mismo padre y se publican juntos mediante `renameat2(RENAME_NOREPLACE)`. El destino existente se acepta solo si contiene exactamente los archivos regulares previstos con bytes idénticos. Se conservan sus fechas y modos.
 - Se rechazan segmentos `..`, enlaces en el recorrido y los árboles activos de configuración HOME/XDG y de sistema reconocidos por el motor. El recorrido y las operaciones usan descriptores de directorio. Usar un padre de pruebas bajo control del usuario, como el creado con `mktemp -d`.
 - Un fallo de escritura controlado retira el temporal y deja intacto cualquier destino previo. Un cierre abrupto puede dejar un directorio oculto `.carbon-preview-*` hermano del destino. La publicación requiere un kernel, libc y sistema de archivos con renombre exclusivo. Destinos en montajes administrados o configuraciones que se ubiquen fuera de las raíces estándar deben revisarse antes de usarlos.
 - La salida es UTF-8 con LF y depende solo del JSON validado y de las plantillas. Carece de rutas de despliegue o acciones sobre procesos.
