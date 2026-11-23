@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-005-A · Propuesta de rediseño Waybar
+
+- Variantes Carbon Compact y Balanced en una plantilla común, con control de densidad y estados de escritorios diferenciados.
+- Configuración versionada con escritorios 1–5 persistentes y ciclo de vida nativo para los demás. Se conservan el reloj centrado, los módulos y sus acciones.
+- Candidatos validados en staging. Validación gráfica y despliegue pendientes de autorización. [Propuesta y rollback](docs/WAYBAR-REDESIGN.md)
+
 ## CARBON-004-B · Piloto Waybar validado
 
 - Destino de prueba Waybar con plantilla completa y candidato idéntico al CSS actual. Validación GTK 3 y pruebas de paridad, determinismo y confinamiento. El usuario confirmó el funcionamiento y la apariencia en la sesión real. La igualdad byte a byte permitió conservar el CSS activo sin recarga. [Piloto Waybar](docs/WAYBAR-THEME.md)

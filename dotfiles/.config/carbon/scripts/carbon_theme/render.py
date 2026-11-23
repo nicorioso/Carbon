@@ -40,7 +40,13 @@ TARGETS = {
         "carbon-tokens.rasi": "rofi.rasi.tmpl",
     },
     "waybar": {"style.css": "waybar.css.tmpl"},
+    "waybar-compact": {"style.css": "waybar-redesign.css.tmpl"},
+    "waybar-balanced": {"style.css": "waybar-redesign.css.tmpl"},
 }
+
+
+# The redesign variants differ only in the horizontal padding of status modules.
+WAYBAR_STATUS_PADDING = {"waybar-compact": "unit", "waybar-balanced": "small"}
 
 
 def render_theme(theme, template_dir, *, target="preview"):
@@ -49,6 +55,8 @@ def render_theme(theme, template_dir, *, target="preview"):
     except KeyError as error:
         raise ThemeError(f"destino de generación desconocido: {target}") from error
     values = _values(theme)
+    if target in WAYBAR_STATUS_PADDING:
+        values["statusPadding"] = values[WAYBAR_STATUS_PADDING[target]]
     outputs = {}
     for filename, template_name in templates.items():
         try:

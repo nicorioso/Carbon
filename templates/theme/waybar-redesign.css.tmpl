@@ -1,0 +1,107 @@
+* {
+    font-family: ${fontFamily}, ${iconsSolid}, ${iconsBrands}, sans-serif;
+    font-size: ${fontSize};
+    min-height: 0;
+    border-radius: ${radius};
+}
+
+window#waybar {
+    background: ${background};
+    color: ${text};
+    border-bottom: ${borderThin} solid ${border};
+}
+
+#workspaces button {
+    min-width: 20px;
+    margin: ${unit} 0;
+    padding: 0 ${unit};
+    color: ${textSecondary};
+    background: none;
+    border: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button:not(.empty):not(.active) {
+    background: ${surface};
+    color: ${text};
+    box-shadow: inset 0 -${borderThin} ${textSecondary};
+}
+
+#workspaces button:hover {
+    background: ${hover};
+    color: ${text};
+}
+
+#workspaces button.active {
+    background: ${selection};
+    color: ${textOnSelection};
+    font-weight: bold;
+}
+
+#workspaces button.urgent {
+    color: ${text};
+    font-weight: bold;
+    box-shadow: inset 0 -${borderStrong} ${selection};
+}
+
+#workspaces button.active.urgent {
+    color: ${textOnSelection};
+    box-shadow: inset 0 -${borderStrong} ${textOnSelection};
+}
+
+#workspaces button:focus {
+    outline: ${borderStrong} solid ${focus};
+    outline-offset: -${borderStrong};
+}
+
+#workspaces button.active:focus {
+    outline-color: ${textOnSelection};
+}
+
+#network, #bluetooth, #pulseaudio, #backlight, #battery, #tray, #custom-ai-usage {
+    padding: 0 ${statusPadding};
+}
+
+#clock {
+    padding: 0 ${small};
+    color: ${text};
+    font-weight: 600;
+}
+
+#network.disconnected, #bluetooth.off, #bluetooth.disabled, #pulseaudio.muted {
+    color: ${textDisabled};
+}
+
+#battery.charging, #battery.critical:not(.charging), #bluetooth.connected {
+    color: ${selection};
+}
+
+#battery.critical:not(.charging) {
+    font-weight: bold;
+}
+
+#tray > .needs-attention image {
+    -gtk-icon-effect: highlight;
+}
+
+#tray > .passive image {
+    -gtk-icon-effect: dim;
+}
+
+tooltip {
+    background: ${surfaceRaised};
+    border: ${borderThin} solid ${border};
+    color: ${text};
+}
+
+#custom-ai-usage {
+    margin: ${unit} 0;
+    border-left: ${borderThin} solid ${border};
+    background: ${surface};
+}
+
+#custom-ai-usage.busy,
+#custom-ai-usage.error {
+    color: #4f9dff;
+}

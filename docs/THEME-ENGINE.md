@@ -44,6 +44,8 @@ Se generan `carbon-preview.css` y `carbon-tokens.rasi`. El CSS declara colores G
 
 El destino optativo `--target waybar` produce un `style.css` completo en su propio directorio de pruebas. El destino predeterminado `preview` produce los mismos dos fragmentos. [Piloto de paridad Waybar](WAYBAR-THEME.md)
 
+Los destinos `waybar-compact` y `waybar-balanced` generan las hojas completas del rediseño con una plantilla compartida. Usar el JSONC común de la rama para su futura validación. [Propuesta Waybar](WAYBAR-REDESIGN.md)
+
 ## Alcance de escritura
 
 - Crear primero el directorio padre de pruebas y elegir un nombre hijo nuevo. Los fragmentos se preparan en un temporal privado del mismo padre y se publican juntos mediante `renameat2(RENAME_NOREPLACE)`. El destino existente se acepta solo si contiene exactamente los archivos regulares previstos con bytes idénticos. Se conservan sus fechas y modos.
