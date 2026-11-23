@@ -27,7 +27,7 @@ El menú espera a que Rofi termine. Un estado 1 con salida vacía se trata como 
 
 Ambas variantes usan el fondo `background`, bloques `surface`, contorno `border` y texto `text`. La selección combina `surfaceRaised` con un borde `selection` de 1 px. El interior oscuro conserva el contraste de los iconos blancos. La fuente Noto Sans de 11 puntos se conserva. El script inserta los glifos de Font Awesome 7 y su color blanco mediante Pango. El diseño mantiene ese tratamiento como excepción local para preservar el script y evita un fondo claro bajo los glifos blancos. Los iconos nativos se dibujan como parte de `element-text`.
 
-**Recomendación.** Usar List como primera opción de validación en la sesión. Conserva el recorrido vertical conocido en acciones sensibles y requiere menos ancho. Grid aprovecha mejor el espacio vertical y distingue los cuatro bloques. Al pasar a Grid, ↓ desde Apagar lleva a Suspender por posición. Confirmar este recorrido con la vista aislada antes de considerar su despliegue.
+Durante el diseño se recomendó List como primera opción por su recorrido vertical conocido y su menor ancho. Grid aprovecha mejor el espacio vertical y distingue los cuatro bloques. Al pasar a Grid, ↓ desde Apagar lleva a Suspender por posición. Ese recorrido se verificó en la prueba aislada de despliegue.
 
 ### Cuadrícula nativa y asignación de teclas
 
@@ -73,3 +73,84 @@ Rofi 2.1.1 validó ambos Rasi con `-rasi-validate` y mostró sus dimensiones y o
 2. Guardar `power-menu.rasi` fuera de Git con propietario, modo y SHA-256. Verificar la copia. Preparar un temporal adyacente con el contenido aprobado y los metadatos originales.
 3. Renombrar el temporal sobre el tema, cotejar hash y modo, y verificar el tema en la siguiente apertura usando primero solo Rofi con entradas de prueba. El despliegue contempla un único destino.
 4. Para volver a la línea base, cerrar el menú, verificar los hashes del tema instalado y del respaldo, preparar un temporal adyacente con los metadatos del original y restaurarlo por renombre. Comparar bytes y modo. El original se leerá en la próxima invocación. [Plan de respaldo](BACKUP-PLAN.md)
+
+## CARBON-005-C.2 · Validación nativa y despliegue de Grid
+
+El usuario seleccionó **Carbon Power Grid** para el despliegue de `c43c1ec`. El lanzador aislado envió cuatro filas de prueba con los iconos y las etiquetas originales a Rofi 2.1.1 en un Hyprland 0.57.2 anidado. Solo había una ruta de salida, el índice de dmenu en stdout. La comprobación capturó el borde de selección en la superficie nativa antes de pulsar Enter. La primera preparación del entorno recibió un modificador Super del compositor anfitrión. Se aisló el teclado anfitrión dentro del compositor de prueba y se repitió con flechas sin modificadores. El candidato mantuvo los mismos bytes.
+
+| Entrada de prueba | Selección visual observada | Resultado |
+|---|---|---|
+| Abrir el menú | Apagar, arriba a la izquierda | El proceso espera entrada y stdout queda vacío. |
+| → desde Apagar | Reiniciar, arriba a la derecha | Enter devuelve `1`, estado 0. |
+| ↓ desde Apagar | Suspender, abajo a la izquierda | Enter devuelve `2`, estado 0. |
+| ← desde Reiniciar | Apagar, arriba a la izquierda | Enter devuelve `0`, estado 0. |
+| ↓ desde Reiniciar | Cerrar sesión, abajo a la derecha | Enter devuelve `3`, estado 0. |
+| Escape con Reiniciar seleccionado | Se cierra el menú | Stdout vacío, estado 1. |
+| ↑ desde Suspender, verificación adicional tras instalar | Apagar, arriba a la izquierda | Enter devuelve `0`, estado 0. |
+
+El recorrido completo pasó antes de instalar con el candidato de staging y después con el Rasi activo. El lanzador no invoca `power-menu.sh`. Pasaron las 87 pruebas automatizadas y el Rasi validó con el parser de Rofi. Dos generaciones independientes coincidieron con el candidato aprobado. La inspección del Rasi confirmó que solo contiene propiedades de tema y asignaciones de navegación.
+
+### Instalación y respaldo
+
+Con Rofi cerrado, se copió el Rasi aprobado a un temporal adyacente, se verificaron su contenido y sus metadatos y se sustituyó el destino por renombre atómico. El único destino activo cambiado fue `~/.config/rofi/power-menu.rasi`. El SHA-256 instalado es `b1816e273f818ce4c442f43e1b58bbce333dea0d26c757f9057da474b9d7bdc6`. El modo quedó en `0644`, UID y GID 1000.
+
+El respaldo privado `~/carbon-power-grid-backup.YEOgEklS` conserva el Rasi anterior en `original/power-menu.rasi`, con SHA-256 `e3091cc7cb725f4caa433468efab9dd6fd619775a4e3b80cc5b452fa0786b5`, manifiesto y estado previo. Se verificó su integridad. El script de energía, el Lua, el atajo y los metadatos de Waybar y Wofi se cotejaron con la línea base. Las invocaciones de los servicios comprobados permanecieron iguales.
+
+### Comprobación visual segura
+
+Desde una terminal de Hyprland, abrir:
+
+```bash
+"$HOME/carbon-power-grid-backup.YEOgEklS/rofi-grid-preview.sh"
+```
+
+El lanzador verifica el hash instalado y muestra las cuatro opciones de prueba. Enter imprime el índice en la terminal y Escape cierra sin salida. La comprobación mediante Super + Escape se omitió porque el menú real abre con Apagar seleccionado y Enter puede ejecutar la acción.
+
+### Aprobación y cierre
+
+El usuario aprobó **Carbon Power Grid** como diseño del menú de energía y confirmó cinco pruebas manuales mediante el flujo seguro:
+
+| Comprobación manual | Resultado |
+|---|---|
+| Cuadrícula | Correcto. |
+| Identidad visual | Correcto. |
+| Navegación | Correcto. |
+| Cancelación | Correcto. |
+| Integración | Correcto. |
+
+La prueba nativa anterior verificó movimientos horizontales y verticales que devolvieron los índices 0 (Apagar), 1 (Reiniciar), 2 (Suspender) y 3 (Cerrar sesión). Escape devolvió estado 1 con salida vacía. Por separado, los mocks verificaron el despacho de cada índice, las entradas inválidas y el fallback de cierre de sesión. Durante las validaciones se omitieron las acciones reales de energía y cierre de sesión.
+
+En el cierre pasaron las 87 pruebas automatizadas. Rofi volvió a validar el Rasi y la salida del motor para `power-grid` coincidió byte a byte con el tema activo. El script y el Lua coincidieron con la línea base. Se verificaron el atajo Super + Escape en Hyprland y el SHA-256 del respaldo anterior.
+
+La aprobación cubre la sesión y el flujo seguro examinados. La geometría y el contraste con otras escalas o fuentes siguen fuera de la comprobación. El menú real conserva Apagar como selección inicial y la aceptación directa.
+
+### Recuperar el tema anterior
+
+Con Rofi cerrado, ejecutar:
+
+```bash
+(
+  set -euo pipefail
+  backup="$HOME/carbon-power-grid-backup.YEOgEklS"
+  theme="$HOME/.config/rofi/power-menu.rasi"
+  (cd "$backup" && sha256sum -c SHA256SUMS)
+  test "$(realpath -- "$theme")" = "$theme"
+  test -f "$theme" && test ! -L "$theme" && test -O "$theme"
+  test "$(sha256sum < "$theme")" = 'b1816e273f818ce4c442f43e1b58bbce333dea0d26c757f9057da474b9d7bdc6  -'
+  status=0
+  pgrep -u "$(id -u)" -x rofi >/dev/null || status=$?
+  test "$status" -eq 1
+  temporary=$(mktemp -- "${theme%/*}/.carbon-power-restore.XXXXXXXX")
+  trap 'if [[ -e "$temporary" ]]; then unlink -- "$temporary"; fi' EXIT
+  cp --preserve=all -- "$backup/original/power-menu.rasi" "$temporary"
+  cmp -- "$temporary" "$backup/original/power-menu.rasi"
+  test "$(stat -c '%a %u %g' "$temporary")" = "$(stat -c '%a %u %g' "$backup/original/power-menu.rasi")"
+  mv -T -- "$temporary" "$theme"
+  cmp -- "$theme" "$backup/original/power-menu.rasi"
+  test "$(stat -c '%a %u %g' "$theme")" = "$(stat -c '%a %u %g' "$backup/original/power-menu.rasi")"
+  sha256sum -- "$theme"
+  rofi -no-config -theme "$theme" -dump-theme | awk '/width:.*340px|columns:.*1;|lines:.*4;/{print}'
+)
+```
+
+El volcado de Rofi confirma la carga del tema original de 340 px y cuatro filas, sin abrir el menú habitual. El comando se detiene si el destino ya no tiene el hash de Grid.

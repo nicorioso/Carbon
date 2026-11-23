@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-005-C · Rofi Carbon Power Grid aprobado
+
+- Carbon Power Grid se adopta como tema del menú de energía. Carbon Theme Engine genera la cuadrícula de 2 × 2 y 408 px de ancho para Rofi 2.1.1. Se conservan el script, el atajo y los índices de las cuatro acciones.
+- El usuario confirmó las cinco comprobaciones del flujo seguro. La prueba nativa cotejó la selección visible con los índices y confirmó Escape con salida vacía. Las acciones del script se probaron con mocks. Se repitieron las 87 pruebas automatizadas.
+- Se verificaron el SHA-256 del Rasi instalado y la integridad del respaldo anterior. [Despliegue, validación y rollback](docs/POWER-MENU-REDESIGN.md#carbon-005-c2--validación-nativa-y-despliegue-de-grid)
+
 ## CARBON-005-B · Wofi Carbon Segmented aprobado
 
 - Wofi Carbon Segmented se adopta para el lanzador y el historial con 540 × 396 px declarados. Carbon Theme Engine genera la configuración y el CSS con los tokens compartidos.

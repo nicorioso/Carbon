@@ -69,3 +69,17 @@ python -B dotfiles/.config/carbon/scripts/generate-theme.py \
 ```
 
 Los candidatos `config` y `style.css` corresponden a `~/.config/wofi/` con el XDG verificado. La copia de `dotfiles/` conserva la línea base. Para instalar en otra sesión, verificar los destinos, respaldar ambos archivos y sustituirlos con Wofi cerrado. [Despliegue y restauración de Wofi](WOFi-REDESIGN.md#carbon-005-b2--despliegue-de-carbon-launcher-segmented)
+
+## Rofi Carbon Power Grid
+
+Carbon Power Grid es el tema aprobado del menú de energía. Desde la raíz del repositorio, generar y validar el Rasi en staging:
+
+```bash
+stage=$(mktemp -d /tmp/carbon-power-grid.XXXXXXXX)
+python -B dotfiles/.config/carbon/scripts/generate-theme.py \
+  --input dotfiles/.config/carbon/theme.json --target power-grid \
+  --output "$stage/candidate"
+rofi -no-config -rasi-validate "$stage/candidate/power-menu.rasi"
+```
+
+El destino habitual es `~/.config/rofi/power-menu.rasi`. El script usa `XDG_CONFIG_HOME` cuando está definido. En un despliegue autorizado, verificar el destino efectivo, respaldar el original y sustituir solo el Rasi con Rofi cerrado. Para validar el tema, usar el lanzador seguro con salida de índices. [Validación y rollback de Power Grid](POWER-MENU-REDESIGN.md#carbon-005-c2--validación-nativa-y-despliegue-de-grid)
