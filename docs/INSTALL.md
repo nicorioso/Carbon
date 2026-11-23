@@ -96,3 +96,59 @@ python -B dotfiles/.config/carbon/scripts/generate-theme.py \
 ```
 
 El destino de esta instalación es `~/.config/mako/config`. Comprobar la precedencia de `~/.mako/config` y el XDG del daemon antes de un despliegue autorizado. Registrar la presencia o ausencia previa, instalar por renombre y aplicar una recarga con la cola vacía. El prototipo HTML permanece en staging. Kitty conserva su configuración independiente. [Despliegue, validación y rollback de Mako](MAKO-REDESIGN.md#carbon-005-d2--despliegue-de-carbon-notifications-compact)
+
+## Preferencia GTK Dark
+
+Para reproducir la apariencia aprobada en una instalación nueva, aplicar la preferencia en una terminal de la sesión gráfica Wayland del usuario. El esquema `org.gnome.desktop.interface` debe estar disponible y la clave debe ser escribible. El frontend `xdg-desktop-portal` debe responder mediante el backend GTK de Settings. La preferencia vive en GSettings de usuario y se aplica aparte de la copia de dotfiles. Los CSS, las fuentes, los iconos y las configuraciones de aplicaciones se conservan. [Diagnóstico, validación y compatibilidad](GTK4-CONTRAST-FIX.md#carbon-006-a--cierre-técnico)
+
+Antes de aplicar, comprobar que la sesión y el portal son los previstos. Guardar en un directorio privado el override explícito, el valor efectivo y la respuesta del portal. Un archivo `explicit` vacío representa una clave ausente. Conservar la ruta impresa para recuperación.
+
+```bash
+schema=org.gnome.desktop.interface
+key=color-scheme
+path=/org/gnome/desktop/interface/color-scheme
+
+portal_color() {
+    busctl --user --auto-start=no call org.freedesktop.portal.Desktop \
+        /org/freedesktop/portal/desktop org.freedesktop.portal.Settings Read ss \
+        org.freedesktop.appearance color-scheme
+}
+
+test "$(gsettings writable "$schema" "$key")" = true &&
+    backup=$(mktemp -d "$HOME/carbon-gtk-dark-before.XXXXXXXX") &&
+    (umask 077
+     dconf read "$path" > "$backup/explicit" &&
+         gsettings get "$schema" "$key" > "$backup/effective" &&
+         portal_color > "$backup/portal") &&
+    printf '%s\n' "$backup"
+```
+
+Tras revisar el respaldo, aplicar el único ajuste y comprobar los resultados. La lectura de GSettings debe devolver `'prefer-dark'` y la del portal debe terminar en `u 1`. Comprobar la cabecera, el título y los controles en GTK 4 y libadwaita. Si la señal tarda en propagarse, volver a consultar antes de decidir el rollback.
+
+```bash
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings get org.gnome.desktop.interface color-scheme
+portal_color
+```
+
+Para revertir, comprobar que el backup corresponde a esa instalación. Revisar también que el override actual siga siendo `'prefer-dark'`. Si la clave tenía un valor explícito, restaurar el GVariant guardado. Si la clave estaba ausente, retirar el override mediante `gsettings reset`.
+
+```bash
+(
+    set -e -o pipefail
+    test -r "$backup/explicit" && test -r "$backup/effective" &&
+        test -r "$backup/portal" || exit 1
+    test "$(dconf read "$path")" = "'prefer-dark'"
+    test "$(gsettings get "$schema" "$key")" = "'prefer-dark'"
+    if test -s "$backup/explicit"; then
+        gsettings set "$schema" "$key" "$(cat "$backup/explicit")"
+    else
+        gsettings reset "$schema" "$key"
+    fi
+    dconf read "$path" | cmp "$backup/explicit" -
+    gsettings get "$schema" "$key" | cmp "$backup/effective" -
+    portal_color | cmp "$backup/portal" -
+)
+```
+
+Verificar por separado el override, la preferencia publicada y la apariencia de ventanas abiertas y nuevas. El portal puede tardar en publicar el valor anterior. Cualquier reinicio requiere autorización independiente. La guía aplica la preferencia de forma manual por usuario. [Rollback ensayado](GTK4-CONTRAST-FIX.md#despliegue-mínimo-y-recuperación)

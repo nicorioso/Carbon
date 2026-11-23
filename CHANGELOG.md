@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-006-A · Preferencia GTK Dark aprobada
+
+- Se adoptó `org.gnome.desktop.interface color-scheme=prefer-dark` como preferencia de usuario. Corrige el bajo contraste entre el título claro del CSS existente y el gradiente claro de Adwaita en GTK 4. La validación Wayland llevó el contraste de la muestra de **1,35:1 a 13,52:1**. Se conservaron las hojas CSS, fuentes, iconos y configuraciones vigentes.
+- El usuario aprobó GTK 4, libadwaita, Wofi, Dolphin, Kitty y el resto del escritorio en la sesión examinada. El portal principal publicó `1`, los servicios conservaron su estado y los 17 archivos protegidos coincidieron con sus hashes. Pasaron 94 pruebas de Carbon, cinco comprobaciones causales y la matriz Wayland aislada. [Auditoría inicial](docs/GTK-QT-VISUAL-AUDIT.md) · [Resultados y recuperación](docs/GTK4-CONTRAST-FIX.md#carbon-006-a--cierre-técnico)
+- Las instalaciones nuevas aplican este ajuste desde la sesión del usuario y registran si la clave tenía un valor explícito para poder restaurarlo. [Instalación de GTK Dark](docs/INSTALL.md#preferencia-gtk-dark)
+
 ## CARBON-005-D · Mako Carbon Notifications Compact aprobado
 
 - Compact es la variante oficial de Mako. Carbon Theme Engine genera la configuración de 320 px de ancho, 112 px de altura máxima y relleno de 8 px. La urgencia crítica se distingue mediante el borde y las opciones funcionales se heredan de Mako.

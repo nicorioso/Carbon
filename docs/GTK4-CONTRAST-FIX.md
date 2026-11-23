@@ -144,3 +144,24 @@ El auxiliar comprueba que el valor efectivo y el override siguen siendo `prefer-
 ### Validación manual pendiente
 
 Comprobar las cabeceras, títulos, botones y entradas en GTK 4 y libadwaita, así como Wofi Segmented, la paleta Carbon de Dolphin, los selectores de archivos, la personalización de Kitty y la apariencia de las aplicaciones de uso habitual. La aprobación visual y funcional del usuario sigue pendiente.
+
+## CARBON-006-A — Cierre técnico
+
+La solución aprobada es la preferencia de usuario `org.gnome.desktop.interface color-scheme=prefer-dark` con los CSS originales. El diagnóstico inicial se conserva como archivo idéntico al de `c6dd7f4`. La rama de auditoría conserva ese commit. La implementación incluye `39f2700` para el experimento causal, `504433c` para la prueba Wayland y `29d2131` para el registro del despliegue principal. [Diagnóstico visual inicial](GTK-QT-VISUAL-AUDIT.md) · [Reproducción en una instalación nueva](INSTALL.md#preferencia-gtk-dark)
+
+### Aprobación del usuario
+
+| Comprobación manual en la sesión principal examinada | Resultado comunicado por el usuario |
+| --- | --- |
+| GTK 4 | Correcto |
+| libadwaita | Correcto |
+| Wofi | Correcto |
+| Dolphin | Correcto |
+| Kitty | Correcto |
+| Resto del escritorio | Correcto |
+
+Se confirmó por lectura que la sesión principal conserva el valor efectivo y explícito `prefer-dark` y que el backend GTK y el portal publican `1`. Los **17 archivos protegidos** coinciden con el manifiesto de despliegue y los servicios examinados conservan su estado, PID e identificador de invocación. El registro de A.4 verifica que el despliegue solo escribió la clave autorizada. En el cierre se encontró una diferencia posterior en el resumen conjunto de las demás entradas de dconf y las claves efectivas del esquema. El registro histórico conserva un hash agregado, por lo que el origen y la clave concreta de esa diferencia quedan sin atribuir. No se corrigió ninguna preferencia durante el cierre.
+
+El manifiesto privado pasó la verificación SHA-256 y conserva valor efectivo anterior `default`, override ausente y portal anterior `0`. El procedimiento de recuperación selecciona `gsettings reset` solo para esa clave y verifica por separado el resultado de GSettings y del portal. Se conservaron el manifiesto y el auxiliar. El rollback de la sesión principal no se ejecutó.
+
+Pasaron **94 pruebas de Carbon** (63 de temas, 16 de interacciones y 15 de capturas), **5 comprobaciones causales** y la **matriz Wayland aislada** (preferencia nativa, ventanas nuevas y existentes, FileChooser y rollback privado). La validación manual y la matriz se limitan a las aplicaciones, escalas y condiciones descritas. Se mantienen fuera de alcance XWayland, otras resoluciones y escalas, las aplicaciones que fuerzan temas propios y el comportamiento dinámico de clientes Qt que ya estaban abiertos.

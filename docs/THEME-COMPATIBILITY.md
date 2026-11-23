@@ -24,3 +24,7 @@ Compact y Segmented conservan Noto Sans de 13 px, iconos de 24 px y selección c
 ## Candidatos del menú de energía de Rofi
 
 Grid y List generan un Rasi completo. Sustituyen el gris local `#454545` y el borde exterior claro por superficies y contornos Carbon. La selección usa fondo elevado y borde claro, compatible con los iconos blancos que el script inserta mediante Pango. Se mantiene Noto Sans de 11 puntos. [Diseño, cuadrícula y seguridad del menú](POWER-MENU-REDESIGN.md)
+
+## Preferencia GTK Dark
+
+La fila GTK de la tabla describe la línea base declarada. En la sesión Wayland examinada, GTK recibió Adwaita Sans 11 y la preferencia publicada por el portal. Carbon conserva el CSS existente y adopta `org.gnome.desktop.interface color-scheme=prefer-dark` para resolver el contraste de cabecera en GTK 4. La muestra GTK 3 conservó su aspecto y el usuario aprobó libadwaita, Wofi, Dolphin y Kitty en la misma sesión. Los temas propios de cada aplicación y otros backends o escalas requieren su propia comprobación. [Comparación de fuentes y precedencias](GTK-QT-VISUAL-AUDIT.md) · [Validación final](GTK4-CONTRAST-FIX.md#carbon-006-a--cierre-técnico)
