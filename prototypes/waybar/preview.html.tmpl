@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$title</title>
+<style>
+:root { color-scheme: dark; }
+body {
+    margin: 0;
+    padding: 32px;
+    background: $background;
+    color: $text;
+    font: 15px system-ui, sans-serif;
+}
+main { max-width: 1320px; margin: auto; }
+h1 { font-size: 28px; margin: 0 0 8px; }
+p { color: $secondary; margin: 0 0 24px; }
+h2 { font-size: 15px; margin: 28px 0 8px; }
+.viewport { overflow-x: auto; }
+iframe { display: block; border: 1px solid $border; }
+</style>
+<main>
+    <h1>$title</h1>
+    <p>Prototipo estático con datos ficticios. Simula la composición, no es una captura ni una barra funcional. Los iconos usan las fuentes locales.</p>
+    <h2>Uso habitual · 1280 px</h2>
+    <div class="viewport">$normal</div>
+    <h2>Contenido largo · 1024 px</h2>
+    <div class="viewport">$long</div>
+    <p>Las etiquetas se conservan completas. La vista estrecha ilustra la presión de espacio; GTK puede distribuirlo de otra forma.</p>
+</main>
+</html>

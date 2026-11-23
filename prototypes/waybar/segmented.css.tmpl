@@ -1,0 +1,28 @@
+#clock {
+    margin: ${unit} 0;
+    padding: 0 ${small};
+    font-weight: 700;
+    border-bottom: ${borderThin} solid ${selection};
+}
+
+#connectivity, #media, #energy, #productivity, #system {
+    margin: ${unit} 0;
+    padding: 0 ${unit};
+    background: ${surface};
+}
+
+#media, #energy, #productivity, #system {
+    margin-left: 6px;
+}
+
+#productivity {
+    background: ${surfaceRaised};
+}
+
+#network, #bluetooth, #pulseaudio, #backlight, #battery, #custom-ai-usage, #tray {
+    padding: 0 ${unit};
+}
+
+#network:hover, #bluetooth:hover, #pulseaudio:hover, #custom-ai-usage:hover {
+    box-shadow: inset 0 -${borderThin} ${focus};
+}

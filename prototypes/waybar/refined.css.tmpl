@@ -1,0 +1,20 @@
+#clock {
+    padding: 0 ${unit};
+    font-weight: 700;
+}
+
+#network, #bluetooth, #pulseaudio, #backlight, #battery, #custom-ai-usage, #tray {
+    padding: 0 ${unit};
+}
+
+#pulseaudio, #battery, #custom-ai-usage, #tray {
+    margin-left: ${small};
+}
+
+#battery, #custom-ai-usage {
+    font-weight: 600;
+}
+
+#network:hover, #bluetooth:hover, #pulseaudio:hover, #custom-ai-usage:hover {
+    color: ${selection};
+}

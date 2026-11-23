@@ -101,3 +101,70 @@ Para revertir, detener la unidad, comprobar que el CSS activo sigue siendo el ca
 - Verificar que el reloj no se desplaza al cambiar la longitud de los indicadores. Revisar Wi-Fi, Bluetooth, volumen, brillo, batería, AI Usage y bandeja, sin forzar errores ni desconexiones. Confirmar tooltips, iconos y acciones normales.
 
 Para A.1, comparar contra Balanced de `46f1162` con la misma escala. Comprobar el reloj con una fecha larga y la separación de los cinco grupos cuando cambian los textos. Revisar que el hover y el foco resulten legibles y que los 32 px efectivos se mantengan. Si un módulo derecho no está disponible, comprobar que el grupo contiguo siga siendo distinguible.
+
+## CARBON-005-A.2 · Dos composiciones para revisión
+
+El usuario aprobó las interacciones y el diseño de los escritorios en Balanced Refinada. El reloj elevado y los indicadores separados por líneas conservaban una composición muy cercana a la barra anterior. Las dos propuestas cambian la relación entre el reloj, la barra y los indicadores. Ambas conservan los ocho bloques de estilos de escritorios, los cinco botones persistentes, los escritorios dinámicos, la posición superior y el formato completo de cada módulo.
+
+| Zona | Carbon Segmented | Carbon Omarchy Refined |
+|---|---|---|
+| Altura declarada | 36 px. Los 4 px adicionales dan aire a los bloques. | 32 px, la altura actual. |
+| Reloj | Negrita 700 con una línea inferior de 1 px en `selection`. Relleno horizontal de 8 px por lado y margen vertical de 4 px. | Negrita 700 sobre el fondo de la barra, con 4 px de relleno por lado. La tipografía marca el centro. |
+| Derecha | Cinco grupos nativos. Cada bloque usa `surface`, con `surfaceRaised` reservado a AI Usage. Los bloques están separados por 6 px adicionales a la separación general de 2 px. | Una fila plana. Las parejas quedan próximas y el primer módulo de cada grupo posterior tiene 8 px de margen adicional. Batería y AI Usage ganan peso tipográfico para facilitar la lectura. |
+| Estados | Subrayado en hover para los módulos con clic. | Contraste de texto en hover para los mismos módulos. |
+| Cambios de configuración | Mueve Wi-Fi y Bluetooth a conectividad, volumen y brillo a multimedia, batería a energía, AI Usage a productividad y bandeja a sistema. | Conserva byte a byte el JSONC de Balanced Refinada. |
+
+Ambas propuestas usan `background` para el fondo, `border` para el borde inferior y `text` para el texto base. Conservan Noto Sans, Font Awesome 7, esquinas cuadradas, contraste de estados y la excepción azul `#4f9dff` del módulo AI Usage. El contorno de foco se aplica donde GTK permite enfocar el módulo. Los grupos de Segmented usan `group/<nombre>`, `orientation: "horizontal"` y `modules`. Waybar 0.16.0 asigna al contenedor el identificador del grupo, que usa la plantilla CSS. Los módulos conservan su definición completa y su orden. [Manual de Waybar](https://github.com/Alexays/Waybar/blob/0.16.0/man/waybar.5.scd.in#L317-L342) · [Implementación de grupos](https://github.com/Alexays/Waybar/blob/0.16.0/src/group.cpp)
+
+### Espacio y centrado
+
+La barra activa de referencia medía **1920 × 32 px lógicos** en el monitor interno. Pango midió los textos de prueba a 12 px con Noto Sans y los glifos de Font Awesome. Se usaron datos ficticios y se sumaron los rellenos, márgenes y separaciones de cada diseño. A la bandeja se le asignaron 3 o 4 iconos de 16 px con sus separaciones configuradas de 6 px.
+
+| Elemento | Uso habitual | Contenido largo |
+|---|---:|---:|
+| Escritorios de la izquierda, estimación con 5 o 10 botones | 140 px | 280 px |
+| Wi-Fi, Bluetooth, audio, brillo y batería, suma de etiquetas | 172 px | 233 px |
+| AI Usage, etiqueta ficticia | 76 px | 107 px |
+| Bandeja estimada | 60 px | 82 px |
+| Reloj en negrita, antes de relleno | 112 px | 121 px |
+| Zona derecha en Balanced Refinada | 420 px | 534 px |
+| Zona derecha en Segmented | 436 px | 550 px |
+| Zona derecha en Refined | 408 px | 522 px |
+| Ancho mínimo para centrar Segmented, aproximado | 1000 px | 1237 px |
+| Ancho mínimo para centrar Refined, aproximado | 936 px | 1173 px |
+
+El cálculo usa `2 × max(ancho_izquierdo, ancho_derecho) + ancho_del_reloj`, incluido el relleno del reloj y con unos pocos píxeles adicionales sujetos a GTK. A 1920 px hay margen según el modelo. A 1280 px, Segmented se acerca al límite con textos largos. A 1024 px ambos diseños pueden perder el centrado con ese escenario. AI Usage, el estado de red y la cantidad de iconos de bandeja explican buena parte de la variación. También cambian los porcentajes, las conexiones Bluetooth y la fecha localizada. Los escritorios altos amplían la zona izquierda a medida que aparecen. El CSS conserva las etiquetas completas y el JSONC mantiene `fixed-center`. La asignación del widget central sigue dependiendo del espacio que ocupen los laterales en GTK. [Centrado en Waybar 0.16.0](https://github.com/Alexays/Waybar/blob/0.16.0/src/bar.cpp#L804-L818) · [Comportamiento de GtkBox](https://docs.gtk.org/gtk3/method.Box.set_center_widget.html)
+
+**Recomendación.** Probar primero Omarchy Refined porque la jerarquía del reloj y los espacios entre grupos cambian la composición con menor demanda horizontal. Conserva los 32 px y el JSONC actual. Segmented ofrece límites visuales más claros entre conectividad, multimedia, energía, productividad y sistema. Es una candidata apropiada si se prefiere esa separación en la pantalla de 1920 px y se acepta reservar 4 px verticales adicionales.
+
+### Prototipos y candidatos
+
+```bash
+cd ~/carbon
+stage=$(mktemp -d /tmp/carbon-waybar-concepts.XXXXXXXX)
+python -B prototypes/waybar/build.py --output "$stage/candidates"
+python -m json.tool "$stage/candidates/segmented.jsonc" >/dev/null
+python -m json.tool "$stage/candidates/refined.jsonc" >/dev/null
+```
+
+Abrir `segmented.html` y `refined.html` en un navegador. Cada documento es autocontenido y muestra la barra completa en un escenario habitual de 1280 px y otro largo de 1024 px con iconos de bandeja y texto de AI Usage ficticios. El navegador utiliza las fuentes locales. El prototipo adapta la composición mediante CSS web; la altura de widgets, el centrado y las transiciones del compositor requieren validación con Waybar.
+
+El preparador reutiliza el validador de tokens, el renderizador de plantillas y la publicación confinada del motor Carbon. Toma las reglas de escritorios y los estados comunes de la plantilla de Balanced, y combina cada una con su plantilla conceptual. La salida es un único lote con `segmented.css`, `segmented.jsonc`, `segmented.html`, `refined.css`, `refined.jsonc` y `refined.html`. El directorio padre debe existir. Una segunda generación en el mismo destino solo se acepta si todo el lote coincide.
+
+```bash
+env -u DISPLAY -u WAYLAND_DISPLAY -u WAYLAND_SOCKET \
+  python -B -m unittest discover -s tests/theme -v
+python -B tests/scripts/test_interactions.py
+python -B tests/screenshots/test_screenshots.py
+git diff --check
+```
+
+Las seis pruebas nuevas verifican los cambios permitidos de configuración, incluidas las acciones y tooltips; los ocho bloques de escritorios; las diferencias de composición; los prototipos completos; la generación determinista e idempotente; y el rechazo de salidas hacia XDG o mediante enlaces. `GtkCssProvider` de GTK 3.24.52 aceptó ambas hojas sin sesión gráfica. El JSONC pasó la validación JSON y la comparación estructural con la línea base. La compatibilidad de las agrupaciones con los selectores se confirma en el código de Waybar 0.16.0; su geometría e interacción requieren una comprobación gráfica autorizada.
+
+### Instalación posterior y recuperación
+
+Con autorización, verificar las rutas efectivas y la identidad de Balanced Refinada antes de desplegar. Respaldar individualmente las versiones activas con modos, propietarios y SHA-256. Segmented requiere sustituir `~/.config/waybar/style.css` y `~/.config/waybar/config.jsonc`. Refined solo requiere sustituir `~/.config/waybar/style.css`. Aplicar el relevo atómico de archivos con Waybar detenido en una ventana autorizada y arrancar únicamente `waybar.service` tras cotejar los hashes. La recarga de CSS por el portal de apariencia sigue siendo relevante.
+
+Si se necesita revertir, detener la unidad y cotejar tanto los archivos desplegados como el respaldo. Restaurar desde temporales adyacentes con los permisos y propietarios originales, verificar hashes y arrancar la misma unidad. La referencia de rollback para ambas propuestas es **Balanced Refinada**, la versión activa de A.1.
+
+En una validación autorizada, comprobar la altura efectiva, el centrado con cinco y diez escritorios, el foco, los clics, los tooltips y la alineación con etiquetas largas. En Segmented, comprobar también que un módulo oculto por su estado habitual no deje un bloque vacío visible. A esta etapa pertenecen los prototipos y los candidatos de staging. La barra activa sigue usando Balanced Refinada.
