@@ -45,6 +45,11 @@ _POWER_ARTIFACTS = {
     "preview.html": "power-menu-preview.html.tmpl",
 }
 
+_MAKO_ARTIFACTS = {
+    "config": "mako.conf.tmpl",
+    "preview.html": "mako-preview.html.tmpl",
+}
+
 TARGETS = {
     "preview": {
         "carbon-preview.css": "gtk.css.tmpl",
@@ -57,6 +62,8 @@ TARGETS = {
     "wofi-segmented": _WOFI_ARTIFACTS,
     "power-grid": _POWER_ARTIFACTS,
     "power-list": _POWER_ARTIFACTS,
+    "mako-compact": _MAKO_ARTIFACTS,
+    "mako-segmented": _MAKO_ARTIFACTS,
 }
 
 
@@ -71,6 +78,11 @@ _WOFI_LAYOUTS = {
 _POWER_LAYOUTS = {
     "power-grid": ("Grid", 408, 2, "small", "medium", "0.5"),
     "power-list": ("List", 320, 1, "unit", "small", "0.0"),
+}
+
+_MAKO_LAYOUTS = {
+    "mako-compact": ("Compact", 320, 112, "small", "borderThin", "surface", 10),
+    "mako-segmented": ("Segmented", 376, 144, "medium", "borderStrong", "surfaceRaised", 11),
 }
 
 _GRID_KEYS = """configuration {
@@ -121,6 +133,26 @@ def _power_values(theme, values, layout):
     }
 
 
+def _mako_values(theme, values, layout):
+    title, width, height, spacing, border, background, points = layout
+    segmented = title == "Segmented"
+    return {
+        "makoTitle": title,
+        "makoWidth": str(width),
+        "makoHeight": str(height),
+        "makoSpacing": values[spacing].removesuffix("px"),
+        "makoBorder": values[border].removesuffix("px"),
+        "makoRadius": values["radius"].removesuffix("px"),
+        "makoSurface": values[background],
+        "makoFont": f'{theme["typography"]["family"]} {points}',
+        "makoTitleMarkup": '<span size="large"><b>%s</b></span>' if segmented else "<b>%s</b>",
+        "makoHtmlFont": _html_css_string(values["fontFamily"]),
+        "makoHtmlIcons": _html_css_string(values["iconsSolid"]),
+        "makoHtmlPoints": str(points),
+        "makoHtmlTitleSize": "1.2em" if segmented else "1em",
+    }
+
+
 def render_theme(theme, template_dir, *, target="preview"):
     try:
         templates = TARGETS[target]
@@ -133,6 +165,8 @@ def render_theme(theme, template_dir, *, target="preview"):
         values.update(_wofi_values(values, _WOFI_LAYOUTS[target]))
     if target in _POWER_LAYOUTS:
         values.update(_power_values(theme, values, _POWER_LAYOUTS[target]))
+    if target in _MAKO_LAYOUTS:
+        values.update(_mako_values(theme, values, _MAKO_LAYOUTS[target]))
     outputs = {}
     for filename, template_name in templates.items():
         try:

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Carbon Notifications ${makoTitle}</title>
+<style>
+:root {
+    color-scheme: dark;
+    --background: ${background};
+    --surface: ${surface};
+    --card: ${makoSurface};
+    --border: ${border};
+    --selection: ${selection};
+    --text: ${text};
+    --secondary: ${textSecondary};
+    --spacing: ${makoSpacing}px;
+    font-family: ${makoHtmlFont}, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--text); background: var(--background); }
+main { max-width: 1152px; margin: auto; padding: clamp(16px, 4vw, 48px); }
+h1 { margin: 0 0 8px; font-size: clamp(22px, 4vw, 34px); }
+p { margin: 0; color: var(--secondary); }
+fieldset { padding: 0; margin: 24px 0 12px; border: 0; }
+legend { color: var(--secondary); margin-bottom: 4px; }
+input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+label { display: inline-block; padding: 6px 12px; border: 1px solid var(--border); cursor: pointer; }
+input:checked + label { background: var(--selection); color: var(--background); }
+input:focus-visible + label { outline: 2px solid var(--text); outline-offset: 2px; }
+.screen {
+    position: relative;
+    container-type: inline-size;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+.canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+    transform: scale(calc(100cqw / 1920px));
+    background: var(--background);
+}
+main:has(#detail:checked) .screen { aspect-ratio: auto; height: 550px; }
+main:has(#detail:checked) .canvas { left: auto; right: 0; transform: none; }
+.stack {
+    position: absolute;
+    top: var(--spacing);
+    right: var(--spacing);
+    display: grid;
+    gap: var(--spacing);
+    width: ${makoWidth}px;
+}
+.card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing);
+    max-height: ${makoHeight}px;
+    overflow: hidden;
+    padding: var(--spacing);
+    background: var(--card);
+    border: ${makoBorder}px solid var(--border);
+    border-radius: ${makoRadius}px;
+    font-size: ${makoHtmlPoints}pt;
+    line-height: 1.4;
+}
+.card.critical { border-color: var(--selection); }
+.message { min-width: 0; overflow-wrap: anywhere; }
+.card h2 { font-size: ${makoHtmlTitleSize}; line-height: 1.35; margin: 0; }
+.card p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+}
+.icon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    font-family: ${makoHtmlIcons}, sans-serif;
+    font-size: 22px;
+}
+.note { margin-top: 14px; }
+main:has(#detail:checked) .stack { width: min(${makoWidth}px, calc(100cqw - 2 * var(--spacing))); }
+</style>
+</head>
+<body>
+<main>
+<h1>Carbon Notifications ${makoTitle}</h1>
+<p>Maqueta de navegador con contenido ficticio · Paneles de ${makoWidth} px sobre una pantalla de 1920 × 1080.</p>
+<fieldset>
+    <legend>Vista</legend>
+    <input type="radio" name="view" id="fit" checked><label for="fit">Pantalla a escala</label>
+    <input type="radio" name="view" id="detail"><label for="detail">Detalle al 100 %</label>
+</fieldset>
+<div class="screen">
+    <div class="canvas">
+        <section class="stack" aria-label="Cinco notificaciones simuladas">
+            <article class="card"><div class="message"><h2>Preferencias guardadas</h2></div></article>
+            <article class="card"><div class="message">
+                <h2>Exportación completada</h2>
+                <p>El documento de ejemplo ya está listo para revisar.</p>
+            </div></article>
+            <article class="card"><div class="message">
+                <h2>Revisión de una exportación con un título excepcionalmente largo</h2>
+                <p>Se creó un lote ficticio para revisar cómo se ajusta el texto de varias líneas cuando una aplicación explica el resultado de una operación, describe los archivos generados y añade instrucciones para continuar con otra tarea más tarde.</p>
+            </div></article>
+            <article class="card critical" aria-label="Ejemplo de urgencia crítica"><div class="message">
+                <h2>La exportación necesita atención</h2>
+                <p>Comprueba el destino de prueba antes de reintentar.</p>
+            </div></article>
+            <article class="card"><span class="icon" aria-hidden="true">&#xf07b;</span><div class="message">
+                <h2>Archivos disponibles</h2>
+                <p>Se preparó una carpeta de ejemplo.</p>
+            </div></article>
+        </section>
+    </div>
+</div>
+<p class="note">Vista conceptual. El icono representa una imagen entregada por la aplicación. Mako usa Pango para medir el texto y decide el ajuste final en Wayland.</p>
+</main>
+</body>
+</html>
