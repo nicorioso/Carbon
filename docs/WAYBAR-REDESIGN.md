@@ -168,3 +168,71 @@ Con autorización, verificar las rutas efectivas y la identidad de Balanced Refi
 Si se necesita revertir, detener la unidad y cotejar tanto los archivos desplegados como el respaldo. Restaurar desde temporales adyacentes con los permisos y propietarios originales, verificar hashes y arrancar la misma unidad. La referencia de rollback para ambas propuestas es **Balanced Refinada**, la versión activa de A.1.
 
 En una validación autorizada, comprobar la altura efectiva, el centrado con cinco y diez escritorios, el foco, los clics, los tooltips y la alineación con etiquetas largas. En Segmented, comprobar también que un módulo oculto por su estado habitual no deje un bloque vacío visible. A esta etapa pertenecen los prototipos y los candidatos de staging. La barra activa sigue usando Balanced Refinada.
+
+## CARBON-005-A.3 · Activación controlada de Carbon Segmented
+
+Se instaló la variante Carbon Segmented generada desde `c9faf0b`. Dos generaciones independientes produjeron el mismo lote y los candidatos coincidieron con los usados en la revisión local. Pasaron 42 pruebas del motor y de Waybar, 16 de interacciones y 15 de capturas. GTK 3.24.52 aceptó el CSS y el JSONC pasó el parser y la comparación estructural. Se conservan las definiciones de los siete indicadores, sus acciones, iconos, formatos y tooltips. Los cinco grupos reorganizan esos módulos y el comportamiento configurado de los escritorios se mantiene.
+
+| Archivo activo | SHA-256 |
+|---|---|
+| `~/.config/waybar/style.css` | `8ce9432b0b0e5a0c01bb9d04b286659fce990162bb9c66b2c82ba8bcd2aa219f` |
+| `~/.config/waybar/config.jsonc` | `f35c2ddb7b2e8657d186a6cba1989b4c8e2c5ea5d2c6268c33ac4074e89229c4` |
+
+Se verificó que ambos archivos originales eran los de Balanced Refinada. El respaldo privado `~/carbon-waybar-segmented-backup.78VHiUzz` contiene los dos originales, `SHA256SUMS`, el manifiesto de presencia y metadatos y el estado anterior de la unidad. Se verificaron los hashes y se ensayó la restauración por renombre en staging. Los dos archivos conservan modo `0644` y el mismo UID y GID.
+
+La primera activación se revirtió porque la verificación consultó el journal antes de que se publicaran las líneas de arranque. Se confirmó la recuperación de Balanced Refinada a 32 px. El segundo intento esperó el registro de las rutas y la capa de Hyprland. En futuros despliegues, usar una espera acotada que tolere un journal inicialmente vacío y confirmar las rutas en la invocación nueva, el PID único y la capa de la barra. Un error crítico o el vencimiento de esa espera activa la recuperación.
+
+`waybar.service` quedó activo con una sola instancia, PID `8384`, y cero reinicios automáticos en esa invocación. El journal confirmó el CSS y el JSONC de la tabla y el arranque del IPC. Hyprland reportó una capa superior de **1920 × 36 px** en `eDP-1`. El arranque final no registró errores ni advertencias en el intervalo examinado. El host de bandeja estaba registrado y su lista tenía un solo elemento, `nm-applet`. Las unidades de sesión, portales, audio, red y Bluetooth comprobadas conservaron sus estados e invocaciones.
+
+### Recuperar Balanced Refinada
+
+Ejecutar desde Kitty o desde una TTY del mismo usuario. El bloque verifica los originales y los dos archivos activos de Segmented. Ante otra edición en los destinos, se detiene antes de suspender Waybar. Prepara los dos temporales junto a sus destinos, detiene solo Waybar y restaura cada archivo por renombre. El respaldo se conserva.
+
+```bash
+(
+  set -euo pipefail
+  backup="$HOME/carbon-waybar-segmented-backup.78VHiUzz"
+  target="$HOME/.config/waybar"
+  (cd "$backup" && sha256sum -c SHA256SUMS)
+  test "$(realpath -- "$target")" = "$target"
+  for file in style.css config.jsonc; do
+    test -f "$target/$file" && test ! -L "$target/$file"
+  done
+  (
+    cd "$target"
+    sha256sum -c - <<'HASHES'
+8ce9432b0b0e5a0c01bb9d04b286659fce990162bb9c66b2c82ba8bcd2aa219f  style.css
+f35c2ddb7b2e8657d186a6cba1989b4c8e2c5ea5d2c6268c33ac4074e89229c4  config.jsonc
+HASHES
+  )
+  declare -A restored
+  for file in style.css config.jsonc; do
+    restored[$file]=$(mktemp -- "$target/.carbon-rollback.XXXXXXXX")
+    cp --preserve=all -- "$backup/original/$file" "${restored[$file]}"
+    cmp -- "$backup/original/$file" "${restored[$file]}"
+    test "$(stat -c '%a %u %g' "${restored[$file]}")" = \
+         "$(stat -c '%a %u %g' "$backup/original/$file")"
+  done
+  systemctl --user stop waybar.service
+  process_status=0
+  pgrep -u "$(id -u)" -x waybar >/dev/null || process_status=$?
+  test "$process_status" -eq 1
+  for file in style.css config.jsonc; do
+    mv -T -- "${restored[$file]}" "$target/$file"
+    cmp -- "$backup/original/$file" "$target/$file"
+    test "$(stat -c '%a %u %g' "$target/$file")" = \
+         "$(stat -c '%a %u %g' "$backup/original/$file")"
+  done
+  systemctl --user start waybar.service
+  systemctl --user is-active waybar.service
+  pgrep -u "$(id -u)" -ax waybar
+)
+```
+
+Tras el arranque, comprobar en la terminal gráfica que `hyprctl layers` muestra una sola capa Waybar de 32 px. Si se interrumpe uno de los renombres, mantener la unidad detenida y completar la restauración desde los originales verificados antes de arrancarla. No volver a ejecutar el bloque íntegro sobre una restauración parcial, porque la comprobación inicial exige los dos hashes de Segmented.
+
+### Aprobación visual y seguimiento
+
+El usuario aprobó visualmente **Carbon Segmented** como diseño oficial de Waybar para la primera versión de Carbon. La barra agrupa conectividad, multimedia, energía, productividad y sistema. La configuración mantiene los escritorios 1–5 persistentes y 6–10 dinámicos. En el cierre se repitieron las 73 pruebas automatizadas, se compararon byte a byte los dos archivos activos con una generación nueva, se verificó el respaldo y se confirmó la capa de 36 px con la misma instancia de Waybar.
+
+Queda pendiente observar el centrado y los recortes con textos excepcionalmente largos, el comportamiento en pantallas más estrechas y los estados de error, ausencia de dispositivos o batería crítica cuando aparezcan naturalmente. La aprobación visual corresponde a la sesión examinada.

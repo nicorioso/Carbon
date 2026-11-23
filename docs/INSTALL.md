@@ -45,3 +45,14 @@ Las referencias absolutas a imágenes personales se conservan literalmente en Hy
 Para el script de capturas, consultar el [procedimiento específico de instalación, prueba gráfica y rollback](SCREENSHOTS.md).
 
 Para los scripts e interacciones de CARBON-003-C, consultar [el orden de instalación, respaldos individuales, rollback y pruebas manuales](SCRIPTS.md).
+
+## Waybar Carbon Segmented
+
+Carbon Segmented es la variante oficial aprobada. Desde la raíz del repositorio, generar sus archivos en staging:
+
+```bash
+stage=$(mktemp -d /tmp/carbon-waybar-segmented.XXXXXXXX)
+python -B prototypes/waybar/build.py --output "$stage/candidates"
+```
+
+Los candidatos para los destinos nativos `~/.config/waybar/style.css` y `~/.config/waybar/config.jsonc` son `segmented.css` y `segmented.jsonc`, respectivamente. Los archivos Waybar de `dotfiles/` sirven como referencias del motor. Para un despliegue autorizado, verificar las rutas activas, respaldar ambos destinos y consultar los hashes, la espera de arranque y la recuperación de Balanced Refinada. [Procedimiento de Waybar](WAYBAR-REDESIGN.md#carbon-005-a3--activación-controlada-de-carbon-segmented)

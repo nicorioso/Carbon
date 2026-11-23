@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-005-A · Waybar Carbon Segmented aprobado
+
+- Carbon Segmented es el diseño oficial de Waybar para la primera versión de Carbon. El usuario aprobó la apariencia en la sesión real, con 36 px efectivos en `eDP-1`.
+- Los indicadores se organizan en conectividad, multimedia, energía, productividad y sistema. Los escritorios 1–5 siguen siendo persistentes y 6–10 aparecen con el ciclo de vida de Hyprland. Se conservan los módulos, formatos, acciones y tooltips.
+- El cierre repitió 73 pruebas y comparó los archivos activos con los candidatos aprobados. El primer despliegue recuperó Balanced Refinada tras una consulta prematura al journal. El segundo esperó la confirmación de carga y la capa de Hyprland. El respaldo y la restauración quedaron verificados. [Activación y rollback](docs/WAYBAR-REDESIGN.md#carbon-005-a3--activación-controlada-de-carbon-segmented)
+
 ## CARBON-005-A.1 · Refinamiento de Waybar Balanced
 
 - Reloj con superficie elevada y más espacio horizontal. Agrupación visual de conectividad, multimedia, energía, productividad y sistema mediante CSS.
