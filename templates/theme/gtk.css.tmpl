@@ -1,0 +1,40 @@
+/* Carbon v1 · fragmento de prueba GTK. */
+@define-color carbon_background ${background};
+@define-color carbon_surface ${surface};
+@define-color carbon_surface_raised ${surfaceRaised};
+@define-color carbon_border ${border};
+@define-color carbon_selection ${selection};
+@define-color carbon_text ${text};
+@define-color carbon_text_secondary ${textSecondary};
+@define-color carbon_text_disabled ${textDisabled};
+@define-color carbon_text_on_selection ${textOnSelection};
+@define-color carbon_hover ${hover};
+@define-color carbon_focus ${focus};
+
+.carbon-preview {
+    background-color: ${surfaceAlpha};
+    color: @carbon_text;
+    border: ${borderThin} solid @carbon_border;
+    border-radius: ${radius};
+    padding: ${small} ${medium};
+    font-family: ${fontFamily}, ${iconsSolid}, ${iconsBrands}, sans-serif;
+    font-size: ${fontSize};
+}
+
+.carbon-preview:hover {
+    background-color: @carbon_hover;
+}
+
+.carbon-preview:focus {
+    outline: ${borderStrong} solid @carbon_focus;
+    outline-offset: ${unit};
+}
+
+.carbon-preview:selected {
+    background-color: @carbon_selection;
+    color: @carbon_text_on_selection;
+}
+
+.carbon-preview:disabled {
+    color: @carbon_text_disabled;
+}

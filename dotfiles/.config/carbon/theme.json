@@ -1,0 +1,27 @@
+{
+  "metadata": {"name": "Carbon", "schemaVersion": 1},
+  "colors": {
+    "background": "#121212",
+    "surface": "#1b1b1b",
+    "surfaceRaised": "#252525",
+    "border": "#333333",
+    "selection": "#d6d6d6",
+    "text": "#f5f5f5"
+  },
+  "semantic": {
+    "textSecondary": "#b3b3b3",
+    "textDisabled": "#a0a0a0",
+    "textOnSelection": "#000000",
+    "hover": "surfaceRaised",
+    "focus": "selection"
+  },
+  "typography": {
+    "family": "Noto Sans",
+    "sizePx": 12,
+    "iconsSolid": "Font Awesome 7 Free Solid",
+    "iconsBrands": "Font Awesome 7 Brands"
+  },
+  "geometry": {"radius": 0, "borderThin": 1, "borderStrong": 2},
+  "spacing": {"unit": 4, "small": 8, "medium": 12},
+  "opacity": {"surface": 0.97}
+}

@@ -43,3 +43,6 @@ imagenes/
 *.tar
 *.tar.*
 *.zip
+
+# Python bytecode
+__pycache__/
