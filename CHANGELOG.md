@@ -4,7 +4,7 @@
 
 - Esquema Carbon v1 con los seis colores oficiales, semántica, tipografía, geometría, espaciado y opacidad.
 - Motor Python estándar con plantillas GTK CSS y Rasi, validación estricta y publicación conjunta de fragmentos de prueba.
-- Sistema de diseño, informe de compatibilidad y pruebas aisladas. Despliegue visual pendiente de autorización.
+- Cierre técnico tras repetir 20 pruebas del motor, 16 de interacciones y 15 de capturas. Los fragmentos deterministas pasaron validación nativa GTK 3/4 y Rasi. Se conservó la configuración visual activa.
 
 ## CARBON-003-C · Robustez de scripts e interacciones
 
