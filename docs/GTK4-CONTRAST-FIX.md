@@ -102,3 +102,45 @@ Antes del cambio autorizado, registrar en un respaldo privado tres valores separ
 Para revertir una clave explícita, pasar el valor GVariant guardado a `gsettings set org.gnome.desktop.interface color-scheme`. Si el respaldo indica ausencia, ejecutar `gsettings reset org.gnome.desktop.interface color-scheme`. Se verifica primero la **configuración** comparando dconf y GSettings con el respaldo. Luego se verifica la **propagación** consultando el portal hasta recibir su código anterior. Por último se verifica la **recuperación visual** en ventanas existentes y en un arranque nuevo. Si una ventana conserva una apariencia obsoleta, probar su reapertura de forma controlada y conservar la evidencia. Cualquier reinicio de un componente queda sujeto a autorización.
 
 **Decisión recomendada.** El candidato queda apto para solicitar autorización de un despliegue de un solo ajuste, con respaldo y verificación inmediata de ventanas abiertas. Quedan fuera de la matriz el escalado fraccional, XWayland, clientes Qt ya abiertos y aplicaciones que fuerzan su propio tema. Si la propagación o una comprobación visual falla, aplicar el rollback documentado antes de estudiar cambios de CSS. La sesión principal no recibió el candidato.
+
+## CARBON-006-A.4 — Despliegue en la sesión principal
+
+El despliegue se realizó desde la revisión `504433c` en `feature/carbon-006-gtk4-fix`, con `main` en `910f716`. Se verificaron la sesión local activa de SDDM y Hyprland 0.57.2, los sockets del runtime principal, los propietarios D-Bus del frontend y del backend GTK, y los 17 SHA-256 registrados en A.3. La clave era escribible. Gio y `dconf read` confirmaron la ausencia de valor de usuario antes de operar.
+
+| Estado comprobado | Antes | Después |
+| --- | --- | --- |
+| Valor efectivo de GSettings | `default` | `prefer-dark` |
+| Predeterminado del esquema | `default` | `default` |
+| Valor explícito de dconf | Ausente | `'prefer-dark'` |
+| Portal principal `org.freedesktop.appearance/color-scheme` | `0` | `1` |
+| Backend GTK de Settings | `0` | `1` |
+
+La única escritura de preferencias fue `gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'`. La lectura posterior confirmó la señal `SettingChanged` con valor `1`. El frontend, los backends GTK e Hyprland, Waybar y Mako conservaron estado activo, PID e identificador de invocación. El inventario dconf se comparó con un hash calculado en memoria al excluir la clave autorizada. También coincidieron las demás claves efectivas de `org.gnome.desktop.interface` y los hashes de los 17 archivos protegidos.
+
+### Validación técnica inicial
+
+Las sondas se conectaron al Wayland y al portal principal con ventanas de datos ficticios. Las capturas proceden del render de widgets de prueba. Se cerraron únicamente esas ventanas.
+
+- GTK 4 recibió `GTK_INTERFACE_COLOR_SCHEME_DARK`. El título enfocado `#f5f5f5` sobre una muestra de cabecera `#282828` dio **13,52:1**. Se revisaron entradas, botones, un menú, un diálogo, la selección de una fila y la distinción del control deshabilitado. Al activar una segunda ventana ficticia, la sonda confirmó la pérdida real de foco y desapareció el contorno de la entrada.
+- libadwaita reportó `AdwStyleManager.dark=true` con la política predeterminada. El título enfocado `#f5f5f5` sobre `#151515` dio **16,75:1**. Se revisaron la lista, el menú, el diálogo y la legibilidad de la ventana enfocada y desenfocada.
+- GTK 3 conservó Adwaita, Adwaita Sans 11 y la preferencia oscura histórica. La captura de la sonda fuera de pantalla mostró controles oscuros, selección legible e icono visible. Esta muestra no mide el foco real de aplicaciones GTK 3 de terceros.
+
+Las medidas abarcan las sondas nuevas que se abrieron en la sesión principal. La respuesta de ventanas que precedían al cambio se comprobó en A.3 y queda pendiente en aplicaciones habituales de la sesión principal. Pasaron las 94 pruebas de Carbon y las cinco comprobaciones causales. La repetición aislada de la matriz Wayland también pasó, incluidos el cambio dinámico, FileChooser y el rollback privado. Un primer intento aislado quedó interrumpido por SIGTERM y el segundo terminó con la integridad de la sesión principal verificada. Los datos del despliegue y las imágenes de las sondas quedan en el directorio privado. El cambio de esta fase en Git se limita a documentación.
+
+### Manifiesto y recuperación
+
+El respaldo de esta operación está en `~/carbon-gtk-dark-backup.9S5ejDyy/`, con directorio `0700` y manifiesto `0600`. `manifest.json` registra los estados previo, predeterminado y explícito de la clave, los propietarios y servicios, el contexto y el comando de restauración. `SHA256SUMS` permite comprobar el manifiesto, la lista de archivos protegidos y el auxiliar de rollback.
+
+Si se requiere recuperar el estado anterior, desde la sesión principal verificar el respaldo y ejecutar el modo de rollback.
+
+```bash
+backup="$HOME/carbon-gtk-dark-backup.9S5ejDyy"
+(cd "$backup" && sha256sum -c SHA256SUMS) &&
+    python -B "$backup/gtk-dark.py" rollback
+```
+
+El auxiliar comprueba que el valor efectivo y el override siguen siendo `prefer-dark`. Luego usa `gsettings reset org.gnome.desktop.interface color-scheme` únicamente para esa clave. Comprueba por separado la ausencia de override, el valor efectivo `default`, el código `0` del frontend y del backend GTK, y los SHA-256 protegidos. La recuperación visual se comprueba con ventanas abiertas y nuevas. Si un cliente conserva una apariencia anterior, registrar el caso y solicitar autorización antes de reiniciarlo. El rollback principal no se ejecutó.
+
+### Validación manual pendiente
+
+Comprobar las cabeceras, títulos, botones y entradas en GTK 4 y libadwaita, así como Wofi Segmented, la paleta Carbon de Dolphin, los selectores de archivos, la personalización de Kitty y la apariencia de las aplicaciones de uso habitual. La aprobación visual y funcional del usuario sigue pendiente.
