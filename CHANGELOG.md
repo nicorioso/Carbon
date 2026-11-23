@@ -4,7 +4,7 @@
 
 - Separación de cancelación y errores de selección, guardado exclusivo de PNG y copia con MIME explícito.
 - Notificación con libnotify. Los fallos posteriores al guardado conservan la imagen.
-- Pruebas aisladas y procedimientos de despliegue y rollback. Instalación y verificación gráfica pendientes.
+- Instalación de `9f61874` y cierre funcional tras 15 pruebas automatizadas y seis comprobaciones manuales satisfactorias en Hyprland. Respaldo previo verificado y rollback documentado.
 
 ## CARBON-002 · Línea base reproducible
 

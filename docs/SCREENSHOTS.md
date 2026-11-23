@@ -21,6 +21,17 @@ Resultado de CARBON-003-A: 15 pruebas pasaron, al igual que `bash -n`. ShellChec
 
 Las pruebas usan HOME y PATH aislados, comandos gráficos simulados y una fecha fija. Los bytes simulados verifican la transferencia y el ciclo de vida del archivo. La codificación PNG real, los protocolos Wayland y la entrega D-Bus requieren la prueba gráfica.
 
+## Validación en Hyprland
+
+El usuario confirmó las seis comprobaciones con la versión instalada de `9f61874`.
+
+1. Print abrió la selección de región.
+2. El PNG se guardó correctamente.
+3. La imagen se copió al portapapeles.
+4. Mako mostró la notificación.
+5. Escape canceló sin efectos secundarios.
+6. Las dos capturas consecutivas se conservaron.
+
 ## Instalación propuesta
 
 Ejecutar solo tras autorización. El bloque exige que el script activo sea regular, pertenezca al usuario, sea ejecutable y conserve el contenido de la línea base auditada. El respaldo se crea en HOME con acceso privado. El candidato se obtiene de la rama local, se valida y se renombra dentro del directorio de destino.
