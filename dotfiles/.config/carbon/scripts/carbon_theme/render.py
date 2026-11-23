@@ -40,6 +40,11 @@ _WOFI_ARTIFACTS = {
     "preview.html": "wofi-preview.html.tmpl",
 }
 
+_POWER_ARTIFACTS = {
+    "power-menu.rasi": "power-menu.rasi.tmpl",
+    "preview.html": "power-menu-preview.html.tmpl",
+}
+
 TARGETS = {
     "preview": {
         "carbon-preview.css": "gtk.css.tmpl",
@@ -50,6 +55,8 @@ TARGETS = {
     "waybar-balanced": {"style.css": "waybar-redesign.css.tmpl"},
     "wofi-compact": _WOFI_ARTIFACTS,
     "wofi-segmented": _WOFI_ARTIFACTS,
+    "power-grid": _POWER_ARTIFACTS,
+    "power-list": _POWER_ARTIFACTS,
 }
 
 
@@ -60,6 +67,24 @@ _WOFI_LAYOUTS = {
     "wofi-compact": ("Compact", 440, 324, "small", "unit", "surface", "background", False),
     "wofi-segmented": ("Segmented", 540, 396, "medium", "small", "background", "surfaceRaised", True),
 }
+
+_POWER_LAYOUTS = {
+    "power-grid": ("Grid", 408, 2, "small", "medium", "0.5"),
+    "power-list": ("List", 320, 1, "unit", "small", "0.0"),
+}
+
+_GRID_KEYS = """configuration {
+    kb-row-left: "Left,Control+Page_Up";
+    kb-row-right: "Right,Control+Page_Down";
+    kb-move-char-back: "Control+b";
+    kb-move-char-forward: "Control+f";
+}
+
+"""
+
+
+def _html_css_string(quoted):
+    return quoted.replace("<", r"\3c ")
 
 
 def _wofi_values(values, layout):
@@ -73,8 +98,26 @@ def _wofi_values(values, layout):
         "wofiPanel": values[panel],
         "wofiSearch": values[search],
         "wofiListBorder": values["borderThin"] if framed_list else "0px",
-        "wofiHtmlFont": values["fontFamily"].replace("<", r"\3c "),
-        "wofiHtmlIcons": values["iconsSolid"].replace("<", r"\3c "),
+        "wofiHtmlFont": _html_css_string(values["fontFamily"]),
+        "wofiHtmlIcons": _html_css_string(values["iconsSolid"]),
+    }
+
+
+def _power_values(theme, values, layout):
+    title, width, columns, gap, padding, alignment = layout
+    return {
+        "powerTitle": title,
+        "powerWidth": str(width),
+        "powerColumns": str(columns),
+        "powerRows": str(4 // columns),
+        "powerGap": values[gap],
+        "powerRowPadding": values[padding],
+        "powerAlignment": alignment,
+        "powerJustify": "center" if columns == 2 else "flex-start",
+        "powerKeys": _GRID_KEYS if columns == 2 else "",
+        "powerFont": _quote(f'{theme["typography"]["family"]} 11'),
+        "powerHtmlFont": _html_css_string(values["fontFamily"]),
+        "powerHtmlIcons": _html_css_string(values["iconsSolid"]),
     }
 
 
@@ -88,6 +131,8 @@ def render_theme(theme, template_dir, *, target="preview"):
         values["statusPadding"] = values[WAYBAR_STATUS_PADDING[target]]
     if target in _WOFI_LAYOUTS:
         values.update(_wofi_values(values, _WOFI_LAYOUTS[target]))
+    if target in _POWER_LAYOUTS:
+        values.update(_power_values(theme, values, _POWER_LAYOUTS[target]))
     outputs = {}
     for filename, template_name in templates.items():
         try:

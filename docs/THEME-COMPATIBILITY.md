@@ -20,3 +20,7 @@ El candidato oficial de CARBON-004-B es idéntico al CSS original byte a byte. U
 ## Candidatos Wofi
 
 Compact y Segmented conservan Noto Sans de 13 px, iconos de 24 px y selección clara con texto negro. El campo `#151515` pasa al fondo Carbon en Compact y a la superficie elevada en Segmented. En ambos, el contorno exterior oscuro se distingue del foco claro del campo. Segmented añade un contorno a la lista. Estos cambios se prepararon en staging. [Comparación y límites de Wofi](WOFi-REDESIGN.md)
+
+## Candidatos del menú de energía de Rofi
+
+Grid y List generan un Rasi completo. Sustituyen el gris local `#454545` y el borde exterior claro por superficies y contornos Carbon. La selección usa fondo elevado y borde claro, compatible con los iconos blancos que el script inserta mediante Pango. Se mantiene Noto Sans de 11 puntos. [Diseño, cuadrícula y seguridad del menú](POWER-MENU-REDESIGN.md)

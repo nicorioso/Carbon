@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Carbon Power ${powerTitle}</title>
+<style>
+:root {
+    color-scheme: dark;
+    --background: ${background};
+    --surface: ${surface};
+    --raised: ${surfaceRaised};
+    --border: ${border};
+    --selection: ${selection};
+    --text: ${text};
+    --secondary: ${textSecondary};
+    font-family: ${powerHtmlFont}, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--text); background: var(--background); }
+main { max-width: 760px; padding: clamp(16px, 5vw, 48px); margin: auto; }
+h1 { font-size: clamp(23px, 4vw, 34px); margin: 0 0 8px; }
+p { color: var(--secondary); margin: 0 0 20px; }
+.stage {
+    display: grid;
+    place-items: center;
+    min-height: 300px;
+    border: ${borderThin} solid var(--border);
+    padding: ${medium};
+    background: var(--surface);
+}
+.stage [hidden] { display: none; }
+.menu {
+    width: min(100%, ${powerWidth}px);
+    padding: ${medium};
+    border: ${borderThin} solid var(--border);
+    border-radius: ${radius};
+    background: var(--background);
+    display: grid;
+    grid-template-columns: repeat(${powerColumns}, minmax(0, 1fr));
+    gap: ${powerGap};
+    outline: none;
+}
+.option {
+    display: flex;
+    justify-content: ${powerJustify};
+    align-items: center;
+    gap: ${small};
+    padding: ${powerRowPadding} ${medium};
+    border: ${borderThin} solid var(--border);
+    border-radius: ${radius};
+    background: var(--surface);
+    font-size: 15px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.option:hover { border-color: var(--secondary); }
+.option[aria-selected="true"] {
+    background: var(--raised);
+    border-color: var(--selection);
+}
+.icon {
+    font-family: ${powerHtmlIcons}, sans-serif;
+    color: white;
+    flex: none;
+}
+.note { margin: 12px 0 0; min-height: 1.6em; }
+button {
+    font: inherit;
+    color: var(--text);
+    background: var(--background);
+    border: ${borderThin} solid var(--border);
+    padding: ${small} ${medium};
+    cursor: pointer;
+}
+button:hover, button:focus-visible { border-color: var(--selection); }
+</style>
+</head>
+<body>
+<main>
+<h1>Carbon Power ${powerTitle}</h1>
+<p>Prototipo de navegador · ${powerWidth} px de ancho · ${powerColumns} columnas × ${powerRows} filas.</p>
+<div class="stage">
+    <div id="menu" class="menu" role="listbox" aria-label="Acciones de energía" tabindex="0"
+         aria-activedescendant="action-0" data-columns="${powerColumns}">
+        <div id="action-0" class="option" role="option" aria-selected="true"><span class="icon" aria-hidden="true">&#xf011;</span>Apagar</div>
+        <div id="action-1" class="option" role="option" aria-selected="false"><span class="icon" aria-hidden="true">&#xf2f9;</span>Reiniciar</div>
+        <div id="action-2" class="option" role="option" aria-selected="false"><span class="icon" aria-hidden="true">&#xf186;</span>Suspender</div>
+        <div id="action-3" class="option" role="option" aria-selected="false"><span class="icon" aria-hidden="true">&#xf2f5;</span>Cerrar sesión</div>
+    </div>
+    <button type="button" id="reopen" hidden>Volver a abrir la simulación</button>
+</div>
+<p class="note" role="status"></p>
+<p>Usa las flechas para moverte. Enter simula aceptar la opción y Escape muestra el estado de cancelación. El prototipo nunca envía acciones al sistema.</p>
+</main>
+<script>
+const menu = document.getElementById("menu");
+const reopen = document.getElementById("reopen");
+const note = document.querySelector(".note");
+const options = [...menu.children];
+const columns = Number(menu.dataset.columns);
+let selected = 0;
+
+function select(index) {
+    options[selected].setAttribute("aria-selected", "false");
+    selected = index;
+    options[index].setAttribute("aria-selected", "true");
+    menu.setAttribute("aria-activedescendant", options[index].id);
+}
+
+function close(message) {
+    menu.hidden = true;
+    reopen.hidden = false;
+    note.textContent = message;
+    reopen.focus();
+}
+
+menu.addEventListener("keydown", event => {
+    let next = selected;
+    switch (event.key) {
+        case "ArrowUp": next -= columns; break;
+        case "ArrowDown": next += columns; break;
+        case "ArrowLeft": if (columns > 1) next--; break;
+        case "ArrowRight": if (columns > 1) next++; break;
+        case "Enter":
+            close("Selección simulada: " + options[selected].lastChild.textContent.trim());
+            return;
+        case "Escape":
+            close("Selección cancelada. El escritorio sigue intacto.");
+            return;
+        default: return;
+    }
+    event.preventDefault();
+    const gridVertical = columns > 1 && ["ArrowUp", "ArrowDown"].includes(event.key);
+    if (gridVertical && (next < 0 || next >= options.length)) return;
+    select((next + options.length) % options.length);
+});
+
+for (const [index, option] of options.entries()) {
+    option.addEventListener("click", () => {
+        select(index);
+        menu.focus();
+    });
+}
+
+reopen.addEventListener("click", () => {
+    reopen.hidden = true;
+    menu.hidden = false;
+    select(0);
+    note.textContent = "";
+    menu.focus();
+});
+menu.focus({preventScroll: true});
+</script>
+</body>
+</html>

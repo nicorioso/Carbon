@@ -1,0 +1,55 @@
+${powerKeys}* {
+    font: ${powerFont};
+    background-color: transparent;
+    text-color: ${text};
+    border-radius: ${radius};
+}
+
+window {
+    location: center;
+    anchor: center;
+    width: ${powerWidth}px;
+    background-color: ${background};
+    border: ${borderThin};
+    border-color: ${border};
+    padding: ${medium};
+}
+
+mainbox {
+    children: [ listview ];
+}
+
+listview {
+    layout: vertical;
+    flow: horizontal;
+    columns: ${powerColumns};
+    lines: ${powerRows};
+    fixed-height: true;
+    fixed-columns: true;
+    scrollbar: false;
+    spacing: ${powerGap};
+}
+
+element {
+    children: [ element-text ];
+    padding: ${powerRowPadding} ${medium};
+    border: ${borderThin};
+    border-color: ${border};
+}
+
+element normal.normal, element alternate.normal {
+    background-color: ${surface};
+    text-color: ${text};
+}
+
+element selected.normal {
+    background-color: ${surfaceRaised};
+    border-color: ${selection};
+    text-color: ${text};
+}
+
+element-text {
+    text-color: inherit;
+    horizontal-align: ${powerAlignment};
+    vertical-align: 0.5;
+}

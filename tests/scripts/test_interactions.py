@@ -47,7 +47,8 @@ if tool in ("wofi", "rofi"):
         assert args == ["-no-config", "-dmenu", "-theme",
                         str(Path(env["HOME"]) / ".config/rofi/power-menu.rasi"),
                         "-markup-rows", "-no-custom", "-format", "i"]
-        assert all(label in data for label in ("Apagar", "Reiniciar", "Suspender", "Cerrar sesión"))
+        rows = [row.rsplit("</span>   ", 1)[1] for row in data.splitlines()]
+        assert rows == ["Apagar", "Reiniciar", "Suspender", "Cerrar sesión"], rows
     print(env.get("SELECTION", "7\tfixture" if tool == "wofi" else "0"))
     print(env.get("MENU_ERROR", ""), end="", file=sys.stderr)
     sys.exit(int(env.get("MENU_STATUS", "0")))
@@ -205,7 +206,7 @@ class Interactions(unittest.TestCase):
     def test_power_escape_empty_and_unknown(self):
         for selection, status, expected in (("", "1", 0), ("", "0", 0),
                                             ("4", "0", 2), ("0\n1", "0", 2),
-                                            ("0", "2", 2)):
+                                            ("0", "1", 1), ("0", "2", 2)):
             with self.subTest(selection=selection, status=status):
                 result = self.power(SELECTION=selection, MENU_STATUS=status)
                 self.assertEqual(result.returncode, expected)
