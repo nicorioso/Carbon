@@ -16,3 +16,7 @@ Los pares de colores que ya coinciden admiten un primer piloto por sustitución 
 ## Piloto Waybar
 
 El candidato oficial de CARBON-004-B es idéntico al CSS original byte a byte. Usa siete colores compartidos y conserva los cinco literales locales, incluida la excepción azul de AI Usage. La geometría y las acciones se mantienen en sus formatos existentes. El usuario confirmó la apariencia y el funcionamiento de la sesión con la hoja original, idéntica al candidato. [Inventario y procedimiento del piloto](WAYBAR-THEME.md)
+
+## Candidatos Wofi
+
+Compact y Segmented conservan Noto Sans de 13 px, iconos de 24 px y selección clara con texto negro. El campo `#151515` pasa al fondo Carbon en Compact y a la superficie elevada en Segmented. En ambos, el contorno exterior oscuro se distingue del foco claro del campo. Segmented añade un contorno a la lista. Estos cambios se prepararon en staging. [Comparación y límites de Wofi](WOFi-REDESIGN.md)

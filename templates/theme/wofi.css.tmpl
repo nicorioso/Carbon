@@ -1,0 +1,70 @@
+* {
+    font-family: ${fontFamily}, sans-serif;
+    font-size: 13px;
+    border-radius: ${radius};
+}
+
+#window {
+    background-color: ${wofiPanel};
+    color: ${text};
+    border: ${borderThin} solid ${border};
+}
+
+#outer-box {
+    padding: ${wofiPadding};
+}
+
+#input {
+    margin-bottom: ${wofiGap};
+    padding: ${small} ${medium};
+    background-color: ${wofiSearch};
+    background-image: none;
+    color: ${text};
+    caret-color: ${text};
+    border: ${borderThin} solid ${border};
+    box-shadow: none;
+}
+
+#input:focus {
+    border-color: ${focus};
+}
+
+#scroll {
+    background-color: ${surface};
+    border: ${wofiListBorder} solid ${border};
+}
+
+#entry {
+    padding: ${wofiGap} ${medium};
+    background-image: none;
+}
+
+#entry #text {
+    color: ${text};
+}
+
+#entry:hover {
+    background-color: ${hover};
+}
+
+#entry:selected {
+    background-color: ${selection};
+    color: ${textOnSelection};
+}
+
+#entry:selected #text {
+    color: ${textOnSelection};
+}
+
+#entry:focus {
+    outline: ${borderThin} solid ${focus};
+    outline-offset: -${borderThin};
+}
+
+#entry:selected:focus {
+    outline-color: ${textOnSelection};
+}
+
+#img {
+    margin-right: ${small};
+}

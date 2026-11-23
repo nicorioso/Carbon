@@ -34,6 +34,12 @@ def _values(theme):
     return values
 
 
+_WOFI_ARTIFACTS = {
+    "style.css": "wofi.css.tmpl",
+    "config": "wofi.conf.tmpl",
+    "preview.html": "wofi-preview.html.tmpl",
+}
+
 TARGETS = {
     "preview": {
         "carbon-preview.css": "gtk.css.tmpl",
@@ -42,11 +48,34 @@ TARGETS = {
     "waybar": {"style.css": "waybar.css.tmpl"},
     "waybar-compact": {"style.css": "waybar-redesign.css.tmpl"},
     "waybar-balanced": {"style.css": "waybar-redesign.css.tmpl"},
+    "wofi-compact": _WOFI_ARTIFACTS,
+    "wofi-segmented": _WOFI_ARTIFACTS,
 }
 
 
 # The redesign variants differ only in the horizontal padding of status modules.
 WAYBAR_STATUS_PADDING = {"waybar-compact": "unit", "waybar-balanced": "small"}
+
+_WOFI_LAYOUTS = {
+    "wofi-compact": ("Compact", 440, 324, "small", "unit", "surface", "background", False),
+    "wofi-segmented": ("Segmented", 540, 396, "medium", "small", "background", "surfaceRaised", True),
+}
+
+
+def _wofi_values(values, layout):
+    title, width, height, padding, gap, panel, search, framed_list = layout
+    return {
+        "wofiTitle": title,
+        "wofiWidth": str(width),
+        "wofiHeight": str(height),
+        "wofiPadding": values[padding],
+        "wofiGap": values[gap],
+        "wofiPanel": values[panel],
+        "wofiSearch": values[search],
+        "wofiListBorder": values["borderThin"] if framed_list else "0px",
+        "wofiHtmlFont": values["fontFamily"].replace("<", r"\3c "),
+        "wofiHtmlIcons": values["iconsSolid"].replace("<", r"\3c "),
+    }
 
 
 def render_theme(theme, template_dir, *, target="preview"):
@@ -57,6 +86,8 @@ def render_theme(theme, template_dir, *, target="preview"):
     values = _values(theme)
     if target in WAYBAR_STATUS_PADDING:
         values["statusPadding"] = values[WAYBAR_STATUS_PADDING[target]]
+    if target in _WOFI_LAYOUTS:
+        values.update(_wofi_values(values, _WOFI_LAYOUTS[target]))
     outputs = {}
     for filename, template_name in templates.items():
         try:

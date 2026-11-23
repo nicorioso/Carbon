@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Carbon Launcher ${wofiTitle}</title>
+<style>
+:root {
+    color-scheme: dark;
+    --background: ${background};
+    --surface: ${surface};
+    --raised: ${surfaceRaised};
+    --border: ${border};
+    --text: ${text};
+    --secondary: ${textSecondary};
+    --selection: ${selection};
+    --selected-text: ${textOnSelection};
+    --focus: ${focus};
+    --hover: ${hover};
+    font-family: ${wofiHtmlFont}, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--background); color: var(--text); }
+main { max-width: 960px; margin: auto; padding: clamp(16px, 5vw, 48px); }
+h1 { margin: 0 0 8px; font-size: clamp(22px, 4vw, 32px); }
+p { margin: 0 0 16px; color: var(--secondary); }
+.samples { display: flex; flex-wrap: wrap; gap: 4px; margin: 24px 0 12px; }
+button {
+    font: inherit;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    padding: 6px 10px;
+    cursor: pointer;
+}
+button:hover { background: var(--raised); }
+button[aria-pressed="true"] { background: var(--selection); color: var(--selected-text); }
+button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.stage {
+    padding: clamp(12px, 4vw, 36px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: grid;
+    justify-items: center;
+}
+.launcher {
+    width: min(100%, ${wofiWidth}px);
+    height: ${wofiHeight}px;
+    padding: ${wofiPadding};
+    background: ${wofiPanel};
+    border: ${borderThin} solid var(--border);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: ${wofiGap};
+    font-size: 13px;
+}
+.search {
+    display: flex;
+    align-items: center;
+    gap: ${small};
+    padding: ${small} ${medium};
+    color: var(--text);
+    background: ${wofiSearch};
+    border: ${borderThin} solid var(--border);
+}
+.search:focus-within { border-color: var(--focus); }
+input {
+    font: inherit;
+    color: inherit;
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    outline: 0;
+}
+input::placeholder { color: var(--secondary); }
+.results {
+    overflow: auto;
+    background: var(--surface);
+    border: ${wofiListBorder} solid var(--border);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.row {
+    display: flex;
+    align-items: center;
+    gap: ${small};
+    padding: ${wofiGap} ${medium};
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+.row:hover { background: var(--hover); }
+.row[aria-selected="true"] { background: var(--selection); color: var(--selected-text); }
+.icon { font-family: ${wofiHtmlIcons}, sans-serif; flex: none; text-align: center; }
+.row .icon { width: 24px; font-size: 19px; }
+.note { min-height: 3em; margin: 12px 0 0; }
+</style>
+</head>
+<body>
+<main>
+<h1>Carbon Launcher ${wofiTitle}</h1>
+<p>Prototipo de navegador · ${wofiWidth} × ${wofiHeight} px · Aplicaciones y entradas ficticias.</p>
+<nav class="samples" aria-label="Escenarios">
+    <button type="button" data-example="apps">Aplicaciones</button>
+    <button type="button" data-example="long">Nombres largos</button>
+    <button type="button" data-example="empty">Sin resultados</button>
+    <button type="button" data-example="few">Pocos resultados</button>
+    <button type="button" data-example="clipboard">Portapapeles</button>
+</nav>
+<div class="stage">
+    <div class="launcher">
+        <label class="search">
+            <span class="icon" aria-hidden="true">&#xf002;</span>
+            <input type="text" placeholder="Buscar" aria-label="Buscar"
+                   role="combobox" aria-autocomplete="list" aria-controls="results" aria-expanded="true">
+        </label>
+        <ul class="results" id="results" role="listbox" aria-label="Resultados"></ul>
+    </div>
+</div>
+<p class="note" role="status" aria-live="polite"></p>
+<p>Usa ↑ y ↓ para cambiar la selección. Enter y Escape simulan sus efectos. El navegador no abre aplicaciones ni lee o modifica el portapapeles.</p>
+</main>
+<script>
+const applications = [
+    ["\uf07b", "Archivos"],
+    ["\uf0ac", "Navegador"],
+    ["\uf120", "Terminal"],
+    ["\uf15c", "Editor de texto"],
+    ["\uf03e", "Visor de imágenes"],
+    ["\uf001", "Reproductor de música"],
+    ["\uf013", "Configuración"],
+];
+const longest = ["\uf15c", "Editor de documentación técnica para proyectos de investigación colaborativa y publicaciones multilingües"];
+const clipboard = [
+    ["", "42    Reunión de planificación del proyecto de ejemplo"],
+    ["", "41    https://example.invalid/manual/carbon"],
+    ["", "40    [imagen ficticia de 800 × 600]"],
+    ["", "39    Nota de ejemplo para recordar los detalles de la revisión de documentación y la planificación de publicaciones multilingües"],
+];
+const examples = {
+    apps: [applications, ""],
+    long: [[longest, ...applications], ""],
+    empty: [applications, "zzzz"],
+    few: [applications, "ar"],
+    clipboard: [clipboard, ""],
+};
+const sampleButtons = [...document.querySelectorAll("[data-example]")];
+const input = document.querySelector("input");
+const results = document.getElementById("results");
+const note = document.querySelector(".note");
+let example = "apps";
+let visible = [];
+let selected = 0;
+
+function select(index, scroll = false) {
+    selected = index;
+    for (const [i, row] of [...results.children].entries()) {
+        row.setAttribute("aria-selected", i === index);
+    }
+    const current = results.children[index];
+    if (current) {
+        input.setAttribute("aria-activedescendant", current.id);
+        if (scroll) current.scrollIntoView({block: "nearest"});
+    } else {
+        input.removeAttribute("aria-activedescendant");
+    }
+}
+
+function render() {
+    const query = input.value.toLowerCase();
+    visible = examples[example][0].filter(([, name]) => name.toLowerCase().includes(query));
+    results.replaceChildren();
+    for (const [index, [glyph, name]] of visible.entries()) {
+        const row = document.createElement("li");
+        row.className = "row";
+        row.id = "result-" + index;
+        row.setAttribute("role", "option");
+        if (glyph) {
+            const icon = document.createElement("span");
+            icon.className = "icon";
+            icon.setAttribute("aria-hidden", "true");
+            icon.textContent = glyph;
+            row.append(icon);
+        }
+        const text = document.createElement("span");
+        text.textContent = name;
+        row.append(text);
+        row.addEventListener("click", () => {
+            input.focus({preventScroll: true});
+            select(index);
+        });
+        results.append(row);
+    }
+    results.scrollTop = 0;
+    select(0);
+    note.textContent = visible.length ? "" : "Sin resultados. La lista de Wofi queda vacía en este estado.";
+}
+
+function show(name, focus = false) {
+    example = name;
+    input.value = examples[name][1];
+    for (const button of sampleButtons) {
+        button.setAttribute("aria-pressed", button.dataset.example === name);
+    }
+    render();
+    if (focus) input.focus({preventScroll: true});
+}
+
+for (const button of sampleButtons) {
+    button.addEventListener("click", () => show(button.dataset.example, true));
+}
+input.addEventListener("input", render);
+input.addEventListener("keydown", event => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        event.preventDefault();
+        if (!visible.length) return;
+        const step = event.key === "ArrowDown" ? 1 : -1;
+        select(Math.max(0, Math.min(visible.length - 1, selected + step)), true);
+    } else if (event.key === "Enter" && visible[selected]) {
+        event.preventDefault();
+        note.textContent = "Selección simulada. El escritorio y el portapapeles siguen intactos.";
+    } else if (event.key === "Escape") {
+        event.preventDefault();
+        show(example);
+        note.textContent = "Cancelación simulada. En Wofi se cierra la ventana.";
+    }
+});
+show(example);
+</script>
+</body>
+</html>
