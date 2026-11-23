@@ -1,5 +1,11 @@
 # Historial de cambios
 
+## CARBON-005-B · Wofi Carbon Segmented aprobado
+
+- Wofi Carbon Segmented se adopta para el lanzador y el historial con 540 × 396 px declarados. Carbon Theme Engine genera la configuración y el CSS con los tokens compartidos.
+- El usuario confirmó seis pruebas manuales en Hyprland, incluidas la apertura de Dolphin y la cancelación segura de cliphist con Escape. Se repitieron las 81 pruebas automatizadas y se verificó la coincidencia byte a byte de los dos archivos activos.
+- El respaldo de ambos originales sigue verificado y el procedimiento restaura el par. [Despliegue, pruebas y rollback](docs/WOFi-REDESIGN.md#carbon-005-b2--despliegue-de-carbon-launcher-segmented)
+
 ## CARBON-005-A · Waybar Carbon Segmented aprobado
 
 - Carbon Segmented es el diseño oficial de Waybar para la primera versión de Carbon. El usuario aprobó la apariencia en la sesión real, con 36 px efectivos en `eDP-1`.

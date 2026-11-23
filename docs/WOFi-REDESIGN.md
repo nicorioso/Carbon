@@ -67,8 +67,50 @@ Se añadieron ocho pruebas de objetivos y validación del motor, configuración,
 3. Con el lanzador cerrado, preparar temporales adyacentes, conservar metadatos y sustituir los dos destinos por renombre. Comparar con el candidato antes de abrir Wofi. La siguiente invocación carga los archivos. El HTML permanece en staging.
 4. Ante un fallo, cerrar Wofi, cotejar los hashes activos y del respaldo, restaurar ambos originales mediante temporales adyacentes y verificar permisos y hashes. Si un destino era nuevo, poner el candidato a cuarentena. Volver a abrir Wofi con el atajo normal para confirmar la recuperación. [Respaldo general](BACKUP-PLAN.md)
 
-### Pendiente en Hyprland
+### Plan de validación en Hyprland
 
 - Revisar posición, anchura, altura, contraste, foco, selección, scroll y texto largo con la escala real. Probar pocos resultados y lista vacía.
 - Confirmar Super + Espacio, flechas, Return, Escape y apertura de Dolphin con su wrapper. Confirmar la procedencia visual de los iconos.
 - Tras autorización, probar Super + Shift + V con datos de prueba controlados y verificar que Escape conserva el portapapeles y que una selección válida recupera el contenido de prueba. Registrar solo el resultado.
+
+## CARBON-005-B.2 · Despliegue de Carbon Launcher Segmented
+
+Se instaló **Carbon Launcher Segmented** de `62cdabc` con Wofi cerrado. La configuración declara **540 × 396 px**, posición central, iconos de 24 px y `line_wrap=word_char`. Wofi cargará el par de usuario en la próxima invocación. Se verificó el directorio XDG efectivo de Hyprland y la ausencia de archivos de configuración o estilo de Wofi en las rutas de sistema consultadas. Se mantuvieron las invocaciones de drun y dmenu, el auxiliar de cliphist y el acceso a Dolphin mediante su entrada `.desktop` local.
+
+| Destino | SHA-256 | Modo y propietario |
+|---|---|---|
+| `~/.config/wofi/config` | `b1c67101e412a74d979acb72644b7c5e1cfa151ab136fe7a8273ded93ec8847b` | `0644`, UID 1000 y GID 1000 |
+| `~/.config/wofi/style.css` | `23a569642f15f4cc08a61e009a0dbc71d7c6c6763f69b713f40b8745d2691e62` | `0644`, UID 1000 y GID 1000 |
+
+Dos generaciones independientes coincidieron entre sí y con el lote revisado. Pasaron 50 pruebas de temas, Wofi y Waybar, 16 de interacciones y 15 de capturas. `GtkCssProvider` de GTK 3.24.52 aceptó la hoja. Se ensayaron instalación y restauración en staging. Un fallo simulado del segundo renombre recuperó el par previo con sus hashes y metadatos. La instalación real se completó sin fallos. Las verificaciones posteriores conservaron los hashes y metadatos de los demás componentes inspeccionados y los PID e invocaciones de los servicios comprobados.
+
+### Respaldo y restauración conjunta
+
+El directorio privado `~/carbon-wofi-segmented-backup.Q56vPPHs` contiene las dos copias individuales en `original/`, el manifiesto `files.tsv`, el estado previo y los dos manifiestos SHA-256. Se verificó la integridad de ambos originales y se conservaron los respaldos previos.
+
+Para restaurar, cerrar Wofi y ejecutar:
+
+```bash
+backup="$HOME/carbon-wofi-segmented-backup.Q56vPPHs"
+(cd "$backup" && sha256sum -c SHA256SUMS) &&
+  python -B "$backup/wofi-pair.py" restore
+```
+
+El comando verifica los dos hashes activos y los originales. Si detecta una edición posterior o una instancia de Wofi abierta, se detiene. Prepara ambos originales en temporales adyacentes y los restaura por renombre con Wofi cerrado. Cada renombre es atómico y el procedimiento recupera el par anterior si falla una sustitución. Verifica hashes, modos y propietarios al terminar. La siguiente apertura de Wofi usará los originales.
+
+### Aprobación funcional y visual
+
+El usuario aprobó **Carbon Launcher Segmented** en Hyprland y confirmó estos seis resultados:
+
+| Prueba manual | Resultado |
+|---|---|
+| Apertura y geometría | Correcto con el tamaño objetivo de 540 × 396 px. |
+| Búsqueda y navegación mediante teclado | Correcto. |
+| Apariencia Segmented | Correcto. |
+| Aplicaciones y Dolphin desde el lanzador | Correcto. |
+| Historial de cliphist mediante dmenu | Correcto. |
+| Cancelación segura del historial con Escape | Correcto. El portapapeles conservó su contenido. |
+
+En el cierre se repitieron 81 pruebas automatizadas. GTK 3.24.52 aceptó el CSS y se verificaron las opciones del archivo de configuración. Ambos archivos activos coincidieron byte a byte con la salida `wofi-segmented` de Carbon Theme Engine en `62cdabc`. Las invocaciones `wofi --show drun` y `wofi --dmenu` y el wrapper de Dolphin conservaron su configuración. Se verificaron nuevamente los dos originales del respaldo.
+
+La aprobación cubre la sesión examinada. La geometría indicada es el objetivo declarado. El ajuste del texto y el tamaño efectivo pueden variar con el escalado de Hyprland y las métricas de GTK en otras pantallas.

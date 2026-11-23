@@ -56,3 +56,16 @@ python -B prototypes/waybar/build.py --output "$stage/candidates"
 ```
 
 Los candidatos para los destinos nativos `~/.config/waybar/style.css` y `~/.config/waybar/config.jsonc` son `segmented.css` y `segmented.jsonc`, respectivamente. Los archivos Waybar de `dotfiles/` sirven como referencias del motor. Para un despliegue autorizado, verificar las rutas activas, respaldar ambos destinos y consultar los hashes, la espera de arranque y la recuperación de Balanced Refinada. [Procedimiento de Waybar](WAYBAR-REDESIGN.md#carbon-005-a3--activación-controlada-de-carbon-segmented)
+
+## Wofi Carbon Segmented
+
+Carbon Launcher Segmented es la variante aprobada para `drun` y `dmenu`, con un tamaño declarado de 540 × 396 px. Desde la raíz del repositorio, generar el par en staging:
+
+```bash
+stage=$(mktemp -d /tmp/carbon-wofi-segmented.XXXXXXXX)
+python -B dotfiles/.config/carbon/scripts/generate-theme.py \
+  --input dotfiles/.config/carbon/theme.json --target wofi-segmented \
+  --output "$stage/candidates"
+```
+
+Los candidatos `config` y `style.css` corresponden a `~/.config/wofi/` con el XDG verificado. La copia de `dotfiles/` conserva la línea base. Para instalar en otra sesión, verificar los destinos, respaldar ambos archivos y sustituirlos con Wofi cerrado. [Despliegue y restauración de Wofi](WOFi-REDESIGN.md#carbon-005-b2--despliegue-de-carbon-launcher-segmented)
