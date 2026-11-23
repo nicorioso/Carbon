@@ -1,5 +1,10 @@
 # Historial de cambios
 
+## CARBON-005-A.1 · Refinamiento de Waybar Balanced
+
+- Reloj con superficie elevada y más espacio horizontal. Agrupación visual de conectividad, multimedia, energía, productividad y sistema mediante CSS.
+- Compact y Balanced comparten plantilla. Escritorios, JSONC y tokens globales intactos. Candidato generado y probado en staging. [Refinamiento Waybar](docs/WAYBAR-REDESIGN.md#carbon-005-a1--refinamiento-de-reloj-e-indicadores)
+
 ## CARBON-005-A · Propuesta de rediseño Waybar
 
 - Variantes Carbon Compact y Balanced en una plantilla común, con control de densidad y estados de escritorios diferenciados.

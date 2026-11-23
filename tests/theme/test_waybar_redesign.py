@@ -93,17 +93,40 @@ class RedesignTests(unittest.TestCase):
 
     def test_variants_have_the_same_rules_except_status_spacing(self):
         compact, balanced = (self.stylesheet(v).read_text(encoding="utf-8") for v in VARIANTS)
-        self.assertEqual(compact.count("padding: 0 4px;"), 2)
-        # Only right-hand status padding differs, including AI Usage and tray.
+        # Only the outer status padding changes between layout targets.
         group = "#network, #bluetooth, #pulseaudio, #backlight, #battery, #tray, #custom-ai-usage"
-        self.assertEqual(compact.replace(f"{group} {{\n    padding: 0 4px;",
-                                         f"{group} {{\n    padding: 0 8px;"), balanced)
+        block = f"{group} {{\n    margin: 4px 0;\n    padding: 0 "
+        self.assertIn(f"{block}4px;", compact)
+        self.assertEqual(compact.replace(f"{block}4px;", f"{block}8px;"), balanced)
         for css in (compact, balanced):
             for text in ('"Noto Sans", "Font Awesome 7 Free Solid", "Font Awesome 7 Brands"',
                          "button:not(.empty):not(.active)", "button.active.urgent", "button.active:focus",
                          "#custom-ai-usage.error", "color: #4f9dff;", "border-radius: 0px;"):
                 self.assertIn(text, css)
             self.assertNotIn("rgba(", css)
+
+    def test_clock_is_raised_and_has_horizontal_padding_without_a_size_cap(self):
+        css = self.stylesheet("balanced").read_text(encoding="utf-8")
+        clock = css.split("#clock {\n", 1)[1].split("}", 1)[0]
+        self.assertIn("margin: 4px 0;", clock)
+        self.assertIn("padding: 0 12px;", clock)
+        self.assertIn("background: #252525;", clock)
+        self.assertNotRegex(clock, r"(?:width|height|overflow):")
+        self.assertIs(self.config["fixed-center"], True)
+
+    def test_status_groups_save_inner_space_without_constraining_text(self):
+        css = self.stylesheet("balanced").read_text(encoding="utf-8")
+        status = css[css.index("#network, #bluetooth, #pulseaudio, #backlight, #battery, #tray"):]
+        self.assertIn("#network, #pulseaudio {\n    padding-right: 4px;", status)
+        self.assertIn("#bluetooth, #backlight {\n    padding-left: 4px;", status)
+        self.assertIn("#pulseaudio, #battery, #custom-ai-usage, #tray {\n    border-left: 1px solid #333333;",
+                      status)
+        self.assertIn("#custom-ai-usage {\n    background: #252525;", status)
+        self.assertIn("#custom-ai-usage:focus {", status)
+        self.assertNotRegex(status, r"(?:width|height|overflow):")
+        for module in self.config["modules-right"]:
+            self.assertNotIn("max-length", self.config[module])
+            self.assertNotIn("min-length", self.config[module])
 
     def test_generation_is_deterministic_and_preview_compatible(self):
         for variant in VARIANTS:

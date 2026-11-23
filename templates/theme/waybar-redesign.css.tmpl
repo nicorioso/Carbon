@@ -60,11 +60,37 @@ window#waybar {
 }
 
 #network, #bluetooth, #pulseaudio, #backlight, #battery, #tray, #custom-ai-usage {
+    margin: ${unit} 0;
     padding: 0 ${statusPadding};
 }
 
+/* Keep the two indicators within each pair close together. */
+#network, #pulseaudio {
+    padding-right: ${unit};
+}
+
+#bluetooth, #backlight {
+    padding-left: ${unit};
+}
+
+/* Boundaries for multimedia, power, productivity and the system tray. */
+#pulseaudio, #battery, #custom-ai-usage, #tray {
+    border-left: ${borderThin} solid ${border};
+}
+
+#network:hover, #bluetooth:hover, #pulseaudio:hover {
+    background: ${hover};
+}
+
+#network:focus, #bluetooth:focus, #pulseaudio:focus, #custom-ai-usage:focus {
+    outline: ${borderThin} solid ${focus};
+    outline-offset: -${borderThin};
+}
+
 #clock {
-    padding: 0 ${small};
+    margin: ${unit} 0;
+    padding: 0 ${medium};
+    background: ${surfaceRaised};
     color: ${text};
     font-weight: 600;
 }
@@ -96,9 +122,11 @@ tooltip {
 }
 
 #custom-ai-usage {
-    margin: ${unit} 0;
-    border-left: ${borderThin} solid ${border};
-    background: ${surface};
+    background: ${surfaceRaised};
+}
+
+#custom-ai-usage:hover {
+    box-shadow: inset 0 -${borderThin} ${focus};
 }
 
 #custom-ai-usage.busy,
